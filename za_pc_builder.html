@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZA Custom PC Parts Builder & Console-Killer Tracker</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #080c14;
+            color: #f3f4f6;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12 antialiased">
+
+    <!-- Header Section -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-blue-600 rounded-xl text-white shadow-lg shadow-blue-500/20">
+                    <i class="fa-solid fa-calculator text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">
+                        ZA Custom PC Matrix & Timeline
+                    </h1>
+                    <p class="text-xs text-slate-400">Interactive Multi-Option & Black Friday Planner</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4 text-xs font-semibold">
+                <!-- R8,000 Flash Badge -->
+                <div class="bg-emerald-950/80 border border-emerald-500/30 text-emerald-300 rounded-lg px-3.5 py-1.5 flex items-center gap-2 shadow-lg shadow-emerald-950/20 animate-pulse">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>R8,000 Initial Cash Active</span>
+                </div>
+                <button onclick="resetToBlueprint()" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <i class="fa-solid fa-rotate-right"></i> Reset to Blueprint
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Column: Multi-Option Workspace (8 Columns) -->
+        <div class="lg:col-span-8 space-y-6">
+            
+            <!-- Quick Intro & Helper Card -->
+            <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 shadow-xl flex items-start gap-4">
+                <div class="p-3 bg-blue-500/10 rounded-xl text-blue-400 mt-1">
+                    <i class="fa-solid fa-info-circle text-lg"></i>
+                </div>
+                <div class="text-xs space-y-1">
+                    <h3 class="font-bold text-white text-sm">How to use your interactive matrix:</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        1. Expand any slot below to see its choices. You can add as many options as you like to compare. <br>
+                        2. Use the <span class="text-blue-400 font-semibold">Active Option</span> radio selector to choose which hardware is currently counted in the build. <br>
+                        3. Click <span class="text-emerald-400 font-semibold"><i class="fa-regular fa-square-check"></i> Obtained</span> to tick off items you have already bought (using your R8,000 starting cash or monthly allocations).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Expandable Component Slots -->
+            <div id="component-container" class="space-y-4">
+                <!-- Javascript will render component category panels here -->
+            </div>
+
+        </div>
+
+        <!-- Right Column: Financial Matrix & Live Timeline (4 Columns) -->
+        <div class="lg:col-span-4 space-y-6">
+            
+            <!-- Dynamic Current Savings & Capital Pool Tracker -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl"></div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-wallet text-emerald-400"></i> Cash Flow Engine
+                    </h3>
+                    <!-- MANUAL RECALCULATE TRIGGER BUTTON -->
+                    <button onclick="calculateMatrix()" class="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2.5 rounded shadow-lg shadow-blue-600/20 transition flex items-center gap-1">
+                        <i class="fa-solid fa-sync-alt animate-spin-hover"></i> Sync & Recalculate
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <!-- Starting Cash Tracker -->
+                    <div class="bg-slate-950/60 border border-slate-900 p-3 rounded-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase">Starting Capital</span>
+                            <span class="text-xs text-slate-500">Available immediately (May 2026)</span>
+                        </div>
+                        <span class="text-lg font-black text-emerald-400">R8,000</span>
+                    </div>
+
+                    <!-- Target / Active Costs Comparison -->
+                    <div class="space-y-2.5 pt-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-400">Normal Active Cost:</span>
+                            <span class="font-bold text-white" id="summary-normal">R0</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-400">Predicted Black Friday:</span>
+                            <span class="font-bold text-blue-400" id="summary-bf">R0</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-400">Already Spent (Obtained):</span>
+                            <span class="font-bold text-emerald-400" id="summary-spent">R0</span>
+                        </div>
+                    </div>
+
+                    <!-- Net Remaining Target -->
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-end">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase">Remaining to Save</span>
+                            <span class="text-xs text-slate-500">(Active Normal - Spent)</span>
+                        </div>
+                        <span class="text-2xl font-black text-blue-500" id="net-remaining-target">R0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instant Buying Power Assistant (What you can buy right now with R8,000) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                    <i class="fa-solid fa-basket-shopping text-blue-400"></i> R8,000 Shopping Planner
+                </h3>
+                <p class="text-[11px] text-slate-400 mb-4">
+                    You have R8,000 right now. Ticking off parts as "Obtained" locks them in. See what components you can secure immediately to shorten your list:
+                </p>
+                
+                <!-- Quick suggestions engine list -->
+                <div id="shopping-suggestions" class="space-y-2 text-xs">
+                    <!-- Dynamic rendering -->
+                </div>
+            </div>
+
+            <!-- Interactive Timeline Progress Tracker -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-1.5">
+                    <i class="fa-solid fa-route text-indigo-400"></i> Roadmap Projection
+                </h3>
+
+                <!-- Active Savings Summary Info -->
+                <div class="space-y-2.5 bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 mb-5 text-[11px]">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Savings Rate:</span>
+                        <span class="font-bold text-white">R5,000 / month (starts June 2026)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Jan 2027 Lump Sum:</span>
+                        <span class="font-bold text-indigo-300">R17,451.27</span>
+                    </div>
+                </div>
+
+                <!-- Projected Milestone Path -->
+                <div class="relative pl-6 border-l-2 border-slate-800 space-y-5 text-xs">
+                    
+                    <!-- Starting May 2026 -->
+                    <div class="relative">
+                        <span class="absolute -left-[31px] top-1 w-4.5 h-4.5 rounded-full border-4 border-slate-900 bg-emerald-500"></span>
+                        <div class="font-bold text-white">May/June 2026 Launch</div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Initial Pool: <span class="font-semibold text-emerald-400">R8,000</span> active.</p>
+                    </div>
+
+                    <!-- November 2026 -->
+                    <div class="relative">
+                        <span class="absolute -left-[31px] top-1 w-4.5 h-4.5 rounded-full border-4 border-slate-900 bg-indigo-500 animate-pulse"></span>
+                        <div class="font-bold text-white">November (Black Friday Sale Target)</div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Accumulated Capital: <span id="november-pool" class="font-semibold text-slate-200">R38,000</span></p>
+                        <p class="text-[10px] text-indigo-400 mt-0.5">Ideal for GPU & storage flash drops.</p>
+                    </div>
+
+                    <!-- December Target Check -->
+                    <div class="relative">
+                        <span id="milestone-dot-dec" class="absolute -left-[31px] top-1 w-4.5 h-4.5 rounded-full border-4 border-slate-900 bg-slate-700"></span>
+                        <div class="font-bold text-white" id="milestone-title-dec">Early December Build Boot</div>
+                        <p class="text-[11px] text-slate-400 mt-0.5" id="dec-status-text">Determining budget clearance...</p>
+                    </div>
+
+                    <!-- January 2027 -->
+                    <div class="relative">
+                        <span id="milestone-dot-jan" class="absolute -left-[31px] top-1 w-4.5 h-4.5 rounded-full border-4 border-slate-900 bg-slate-700"></span>
+                        <div class="font-bold text-white" id="milestone-title-jan">January 2027 Finalization</div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Final Accumulated Cap: <span class="font-bold text-slate-200">R65,451.27</span></p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Interactive script handling multi-option state -->
+    <script>
+        // Complex state database mapping categories to options
+        let defaultBlueprint = {
+            categories: [
+                {
+                    id: 'cpu',
+                    title: 'CPU (Processor)',
+                    icon: 'fa-microchip',
+                    isOpen: true,
+                    options: [
+                        { id: 'cpu-opt1', name: 'AMD Ryzen 5 9600X 5.40GHz 6-Core (Zen 5)', url: 'https://www.wootware.co.za/amd-100-100001405wof-ryzen-5-9600x-5-40ghz-6-core-zen-5-socket-am5-desktop-cpu-cooler-not-included.html', normalPrice: 4499, bfPrice: 4199, isActive: true, isPurchased: false, note: '' },
+                        { id: 'cpu-opt2', name: 'AMD Ryzen 5 7600X 4.70GHz 6-Core (Zen 4)', url: 'https://www.wootware.co.za/computer-hardware/cpus-processors/shopby/socket_am5', normalPrice: 3999, bfPrice: 3599, isActive: false, isPurchased: false, note: '' }
+                    ]
+                },
+                {
+                    id: 'gpu',
+                    title: 'GPU (Graphics Card)',
+                    icon: 'fa-images',
+                    isOpen: true,
+                    options: [
+                        { id: 'gpu-opt1', name: 'XFX Radeon RX 9070 XT Swift Triple Fan 16GB', url: 'https://www.wootware.co.za/xfx-radeon-rx-9070-xt-swift-triple-fan-gaming-edition-rx-97ts16b7-16gb-gddr6-128-bit-pci-e-5-0-desktop-graphics-card.html', normalPrice: 14999, bfPrice: 13499, isActive: true, isPurchased: false, note: '' },
+                        { id: 'gpu-opt2', name: 'Palit GeForce RTX 5070 Ti GamingPro-S 16GB GDDR7', url: 'https://www.wootware.co.za/palit-geforce-rtx-5070-ti-gamingpro-s-ne7507t019t2-gb2031u-16gb-gddr7-256-bit-pcie-5-0-desktop-graphics-card.html', normalPrice: 18799, bfPrice: 16999, isActive: false, isPurchased: false, note: '' },
+                        { id: 'gpu-opt3', name: 'Palit GeForce RTX 5060 Ti 16GB GDDR7', url: 'https://www.wootware.co.za/computer-hardware/video-cards-video-devices/shopby/geforce_rtx_4080-geforce_rtx_4070_super-geforce_rtx_5070_ti-geforce_rtx_5070-radeon_rx_9070_xt-radeon_rx_9070-radeon_rx_9060_xt/in_stock_with_supplier-in_stock_with_wootware-stock_coming_soon', normalPrice: 11499, bfPrice: 10499, isActive: false, isPurchased: false, note: '' }
+                    ]
+                },
+                {
+                    id: 'motherboard',
+                    title: 'Motherboard',
+                    icon: 'fa-server',
+                    isOpen: false,
+                    options: [
+                        { id: 'mobo-opt1', name: 'Sapphire NITRO+ B850M WIFI AM5 Micro-ATX', url: 'https://www.wootware.co.za/sapphire-52123-01-40g-nitro-b850m-wifi-amd-b850-ryzen-socket-am5-micro-atx-desktop-motherboard.html', normalPrice: 3199, bfPrice: 2999, isActive: true, isPurchased: false, note: '' },
+                        { id: 'mobo-opt2', name: 'Gigabyte B650M Aorus Elite AX Wi-Fi 6E', url: 'https://www.wootware.co.za/gigabyte-b650m-aorus-elite-ax-wifi-6e-amd-b650-ryzen-socket-am5-micro-atx-desktop-motherboard.html', normalPrice: 3877, bfPrice: 3499, isActive: false, isPurchased: false, note: '' }
+                    ]
+                },
+                {
+                    id: 'memory',
+                    title: 'RAM (Memory)',
+                    icon: 'fa-memory',
+                    isOpen: false,
+                    options: [
+                        { id: 'ram-opt1', name: 'XPG Lancer Neon RGB 32GB (2x16GB) DDR5-6000 CL30', url: 'https://www.wootware.co.za/recertified-xpg-ax5u6000c3016g-dclanrsg-lancer-neon-rgb-32gb-2x16gb-ddr5-6000-cl30-1-35v-expo-black-udimm-desktop-memory.html', normalPrice: 8699, bfPrice: 1999, isActive: true, isPurchased: false, note: '' }
+                    ]
+                },
+                {
+                    id: 'psu',
+                    title: 'Power Supply (PSU)',
+                    icon: 'fa-plug',
+                    isOpen: false,
+                    options: [
+                        { id: 'psu-opt1', name: 'Super Flower Leadex III GE 850W Gold ATX 3.1 Fully Modular', url: 'https://www.wootware.co.za/super-flower-sf-850f14ge-leadex-iii-ge-850w-80-plus-gold-atx-3-1-fully-modular-black-desktop-power-supply.html', normalPrice: 2199, bfPrice: 1899, isActive: true, isPurchased: false, note: '' }
+                    ]
+                },
+                {
+                    id: 'storage',
+                    title: 'Storage (SSD)',
+                    icon: 'fa-database',
+                    isOpen: false,
+                    options: [
+                        { id: 'ssd-opt1', name: 'Kioxia Exceria Plus G4 1TB Gen4 M.2 NVMe SSD', url: 'https://www.wootware.co.za/computer-hardware/video-cards-video-devices/shopby/geforce_rtx_4080-geforce_rtx_4070_super-geforce_rtx_5070_ti-geforce_rtx_5070-radeon_rx_9070_xt-radeon_rx_9070-radeon_rx_9060_xt/in_stock_with_supplier-in_stock_with_wootware-stock_coming_soon', normalPrice: 2300, bfPrice: 1800, isActive: true, isPurchased: false, note: '' }
+                    ]
+                },
+                {
+                    id: 'cooler',
+                    title: 'CPU Cooler',
+                    icon: 'fa-snowflake',
+                    isOpen: false,
+                    options: [
+                        { id: 'cooler-opt1', name: 'ID-Cooling FROZN A620 PRO SE BLACK 120mm Dual-Tower', url: 'https://www.wootware.co.za/id-cooling-frozn-a620-pro-se-black-120mm-dual-tower-black-pwm-cpu-cooler.html', normalPrice: 849, bfPrice: 749, isActive: true, isPurchased: false, note: '' }
+                    ]
+                },
+                {
+                    id: 'chassis',
+                    title: 'Chassis (Case)',
+                    icon: 'fa-box',
+                    isOpen: false,
+                    options: [
+                        { id: 'case-opt1', name: 'Lian Li A3-mATX Wood-Accent Black Tempered Glass', url: 'https://www.wootware.co.za/lian-li-g99-a3x-wdg-00-a3-matx-tempered-glass-black-steel-micro-atx-mini-tower-desktop-chassis.html', normalPrice: 1599, bfPrice: 1499, isActive: true, isPurchased: false, note: '' }
+                    ]
+                }
+            ]
+        };
+
+        let state = {};
+
+        // Save active state directly into browser local storage
+        function saveStateToLocalStorage() {
+            localStorage.setItem('za_pc_builder_state_v2', JSON.stringify(state));
+        }
+
+        // Toggle Expandable Accordion Card
+        function toggleCategory(catId) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (cat) {
+                cat.isOpen = !cat.isOpen;
+                saveStateToLocalStorage();
+                renderApp();
+            }
+        }
+
+        // Change the active selected option inside a Category
+        function setActiveOption(catId, optionId) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (cat) {
+                cat.options.forEach(opt => {
+                    opt.isActive = (opt.id === optionId);
+                });
+                saveStateToLocalStorage();
+                renderApp();
+            }
+        }
+
+        // Toggle purchased state of a specific option
+        function togglePurchased(catId, optionId) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (cat) {
+                const opt = cat.options.find(o => o.id === optionId);
+                if (opt) {
+                    opt.isPurchased = !opt.isPurchased;
+                    // If marked as purchased, lock it in as active
+                    if (opt.isPurchased) {
+                        cat.options.forEach(o => o.isActive = (o.id === optionId));
+                    }
+                    saveStateToLocalStorage();
+                    renderApp();
+                }
+            }
+        }
+
+        // Add a brand new variant inside a Category
+        function addOption(catId) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (cat) {
+                const newId = `${catId}-opt-${Date.now()}`;
+                cat.options.push({
+                    id: newId,
+                    name: 'New Custom Model Name',
+                    url: '',
+                    normalPrice: 0,
+                    bfPrice: 0,
+                    isActive: false,
+                    isPurchased: false,
+                    note: ''
+                });
+                cat.isOpen = true; 
+                saveStateToLocalStorage();
+                renderApp();
+            }
+        }
+
+        // Remove a specific variant option
+        function removeOption(catId, optionId) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (cat) {
+                const optIdx = cat.options.findIndex(o => o.id === optionId);
+                if (optIdx !== -1) {
+                    const wasActive = cat.options[optIdx].isActive;
+                    cat.options.splice(optIdx, 1);
+                    // Reassign active option if deleted one was active
+                    if (wasActive && cat.options.length > 0) {
+                        cat.options[0].isActive = true;
+                    }
+                    saveStateToLocalStorage();
+                    renderApp();
+                }
+            }
+        }
+
+        // Update single option field (triggers instant silent recalculation)
+        function updateOptionField(catId, optionId, field, val) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (cat) {
+                const opt = cat.options.find(o => o.id === optionId);
+                if (opt) {
+                    if (field === 'normalPrice' || field === 'bfPrice') {
+                        opt[field] = Math.max(0, parseFloat(val) || 0);
+                    } else {
+                        opt[field] = val;
+                    }
+                    calculateMatrixSilent();
+                    saveStateToLocalStorage();
+                }
+            }
+        }
+
+        // Add a completely new Custom Category Slot
+        function addNewCategory() {
+            const newCatId = `custom-slot-${Date.now()}`;
+            state.categories.push({
+                id: newCatId,
+                title: 'New Custom Category',
+                icon: 'fa-folder-plus',
+                isOpen: true,
+                options: [
+                    { id: `${newCatId}-opt-1`, name: 'New Component Variant', url: '', normalPrice: 0, bfPrice: 0, isActive: true, isPurchased: false, note: '' }
+                ]
+            });
+            saveStateToLocalStorage();
+            renderApp();
+        }
+
+        // Reset to original roadmap settings
+        function resetToBlueprint() {
+            state = JSON.parse(JSON.stringify(defaultBlueprint));
+            saveStateToLocalStorage();
+            renderApp();
+        }
+
+        // Renders all components & triggers calculation layout
+        function renderApp() {
+            const container = document.getElementById('component-container');
+            container.innerHTML = '';
+
+            state.categories.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl transition-all duration-200";
+                
+                // Card Header Block
+                const header = document.createElement('div');
+                header.className = `p-4 flex justify-between items-center cursor-pointer transition ${cat.isOpen ? 'bg-slate-800/40 border-b border-slate-800' : 'bg-slate-900 hover:bg-slate-800/20'}`;
+                header.onclick = () => toggleCategory(cat.id);
+                
+                const activeOpt = cat.options.find(o => o.isActive);
+                const activePriceText = activeOpt ? `R${activeOpt.normalPrice.toLocaleString('en-ZA')}` : 'R0';
+                
+                header.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-slate-950 text-blue-400 rounded-xl">
+                            <i class="fa-solid ${cat.icon} text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm text-white">${cat.title}</h3>
+                            <p class="text-[11px] text-slate-400" id="sub-${cat.id}">
+                                ${activeOpt ? `${activeOpt.name} (${activePriceText})` : 'No active selection'}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        ${activeOpt && activeOpt.isPurchased ? `
+                            <span class="text-[10px] font-extrabold text-emerald-400 bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-1 rounded-full flex items-center gap-1">
+                                <i class="fa-solid fa-check"></i> Obtained
+                            </span>
+                        ` : ''}
+                        <i class="fa-solid ${cat.isOpen ? 'fa-chevron-up' : 'fa-chevron-down'} text-slate-500 text-xs"></i>
+                    </div>
+                `;
+                card.appendChild(header);
+
+                // Option Row Listing (Only show if open)
+                if (cat.isOpen) {
+                    const body = document.createElement('div');
+                    body.className = "p-4 space-y-3 bg-slate-950/40";
+                    
+                    cat.options.forEach(opt => {
+                        const optRow = document.createElement('div');
+                        optRow.className = `p-3.5 rounded-xl border transition ${opt.isActive ? 'border-blue-500/50 bg-blue-950/10' : 'border-slate-800 hover:border-slate-700 bg-slate-950/40'}`;
+                        
+                        optRow.innerHTML = `
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-start">
+                                <!-- Status Toggles (Active & Obtained) -->
+                                <div class="md:col-span-3 flex items-center gap-3.5 pt-2">
+                                    <!-- Radio Active Selection -->
+                                    <label class="flex items-center gap-2 cursor-pointer text-xs select-none">
+                                        <input type="radio" name="radio-${cat.id}" ${opt.isActive ? 'checked' : ''} onchange="setActiveOption('${cat.id}', '${opt.id}')" class="text-blue-500 focus:ring-0 focus:ring-offset-0 bg-slate-900 border-slate-700 h-4 w-4">
+                                        <span class="${opt.isActive ? 'text-blue-400 font-bold' : 'text-slate-400'}">Active</span>
+                                    </label>
+
+                                    <!-- Obtained Checked Box -->
+                                    <label class="flex items-center gap-2 cursor-pointer text-xs select-none">
+                                        <input type="checkbox" ${opt.isPurchased ? 'checked' : ''} onchange="togglePurchased('${cat.id}', '${opt.id}')" class="rounded text-emerald-500 bg-slate-900 border-slate-700 h-4 w-4 focus:ring-0 focus:ring-offset-0">
+                                        <span class="${opt.isPurchased ? 'text-emerald-400 font-extrabold' : 'text-slate-400'}">Obtained</span>
+                                    </label>
+                                </div>
+
+                                <!-- Inputs / Spec & Notes fields -->
+                                <div class="md:col-span-5 space-y-2">
+                                    <input type="text" value="${opt.name}" onchange="updateOptionField('${cat.id}', '${opt.id}', 'name', this.value)" class="bg-slate-900 border border-slate-800 focus:border-blue-500 focus:ring-0 rounded-lg px-2.5 py-1 text-xs text-white font-medium w-full focus:outline-none">
+                                    <div class="flex gap-2">
+                                        <input type="text" placeholder="Paste product link URL" value="${opt.url}" onchange="updateOptionField('${cat.id}', '${opt.id}', 'url', this.value)" class="bg-slate-900 border border-slate-800 focus:border-blue-500 focus:ring-0 rounded-lg px-2.5 py-1 text-[10px] text-slate-300 w-full focus:outline-none placeholder-slate-600">
+                                        ${opt.url ? `
+                                            <a href="${opt.url}" target="_blank" class="p-1 px-2.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white flex items-center border border-slate-700 transition">
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                            </a>
+                                        ` : ''}
+                                    </div>
+                                    
+                                    <!-- Dynamic Notes Field -->
+                                    <div class="flex items-center gap-2 bg-slate-950/80 p-1.5 rounded-lg border border-slate-800/80">
+                                        <span class="text-[9px] font-bold text-slate-500 uppercase flex items-center shrink-0">
+                                            <i class="fa-solid fa-pencil mr-1 text-blue-400"></i> Note:
+                                        </span>
+                                        <input type="text" placeholder="Add custom notes..." value="${opt.note || ''}" 
+                                            oninput="updateOptionField('${cat.id}', '${opt.id}', 'note', this.value)"
+                                            onblur="calculateMatrix()"
+                                            class="bg-transparent border-none focus:ring-0 p-0 text-[11px] text-slate-300 placeholder-slate-700 w-full focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <!-- Price Fields -->
+                                <div class="md:col-span-3 grid grid-cols-2 gap-2 pt-1">
+                                    <div>
+                                        <span class="text-[9px] font-bold text-slate-500 block uppercase">Normal Price</span>
+                                        <div class="flex items-center gap-1 mt-0.5">
+                                            <span class="text-xs text-slate-500 font-semibold">R</span>
+                                            <input type="number" value="${opt.normalPrice}" 
+                                                oninput="updateOptionField('${cat.id}', '${opt.id}', 'normalPrice', this.value)" 
+                                                onblur="calculateMatrix()"
+                                                class="bg-slate-900 border border-slate-800 focus:border-blue-500 rounded-lg px-1.5 py-1 text-xs font-bold text-white w-full text-right focus:outline-none">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="text-[9px] font-bold text-blue-500 block uppercase">Predicted BF</span>
+                                        <div class="flex items-center gap-1 mt-0.5">
+                                            <span class="text-xs text-slate-500 font-semibold">R</span>
+                                            <input type="number" value="${opt.bfPrice}" 
+                                                oninput="updateOptionField('${cat.id}', '${opt.id}', 'bfPrice', this.value)" 
+                                                onblur="calculateMatrix()"
+                                                class="bg-slate-900 border border-slate-800 focus:border-blue-500 rounded-lg px-1.5 py-1 text-xs font-bold text-blue-400 w-full text-right focus:outline-none">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Delete button slot -->
+                                <div class="md:col-span-1 text-center pt-2">
+                                    <button onclick="removeOption('${cat.id}', '${opt.id}')" class="text-slate-600 hover:text-rose-500 p-1 transition" title="Delete Option">
+                                        <i class="fa-solid fa-circle-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        body.appendChild(optRow);
+                    });
+
+                    // Add custom option button at bottom of active body
+                    const addBtnDiv = document.createElement('div');
+                    addBtnDiv.className = "flex justify-end pt-1";
+                    addBtnDiv.innerHTML = `
+                        <button onclick="addOption('${cat.id}')" class="text-[11px] text-blue-400 hover:text-white bg-slate-900 hover:bg-blue-600 transition border border-slate-800 hover:border-blue-500 px-3 py-1.5 rounded-lg flex items-center gap-1">
+                            <i class="fa-solid fa-plus-circle"></i> Add Alternative Option
+                        </button>
+                    `;
+                    body.appendChild(addBtnDiv);
+                    
+                    card.appendChild(body);
+                }
+
+                container.appendChild(card);
+            });
+
+            // Master Add Category Slot Button
+            const addCatDiv = document.createElement('div');
+            addCatDiv.className = "pt-2 flex justify-center";
+            addCatDiv.innerHTML = `
+                <button onclick="addNewCategory()" class="text-xs font-semibold text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 transition border border-slate-800 px-5 py-3 rounded-xl flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus text-blue-400"></i> Create Custom Part Category
+                </button>
+            `;
+            container.appendChild(addCatDiv);
+
+            calculateMatrix();
+        }
+
+        // Silent internal matrix updater (runs during character typing)
+        function calculateMatrixSilent() {
+            let activeNormalSum = 0;
+            let activeBFSum = 0;
+            let totalSpentSum = 0;
+
+            state.categories.forEach(cat => {
+                const activeOpt = cat.options.find(o => o.isActive);
+                if (activeOpt) {
+                    const subEl = document.getElementById(`sub-${cat.id}`);
+                    if (subEl) {
+                        subEl.innerText = `${activeOpt.name} (R${activeOpt.normalPrice.toLocaleString('en-ZA')})`;
+                    }
+                }
+
+                cat.options.forEach(opt => {
+                    if (opt.isActive) {
+                        activeNormalSum += opt.normalPrice;
+                        const bfPriceToUse = (opt.bfPrice !== undefined && opt.bfPrice > 0) ? opt.bfPrice : opt.normalPrice;
+                        activeBFSum += bfPriceToUse;
+
+                        if (opt.isPurchased) {
+                            totalSpentSum += opt.normalPrice;
+                        }
+                    } else if (opt.isPurchased) {
+                        totalSpentSum += opt.normalPrice;
+                    }
+                });
+            });
+
+            document.getElementById('summary-normal').innerText = `R${activeNormalSum.toLocaleString('en-ZA')}`;
+            document.getElementById('summary-bf').innerText = `R${activeBFSum.toLocaleString('en-ZA')}`;
+            document.getElementById('summary-spent').innerText = `R${totalSpentSum.toLocaleString('en-ZA')}`;
+
+            const netRemaining = Math.max(0, activeNormalSum - totalSpentSum);
+            document.getElementById('net-remaining-target').innerText = `R${netRemaining.toLocaleString('en-ZA')}`;
+        }
+
+        // Master Calculations & UI Refresher (Triggered on focus exit or Recalculate Button click)
+        function calculateMatrix() {
+            let activeNormalSum = 0;
+            let activeBFSum = 0;
+            let totalSpentSum = 0;
+
+            // Iterate over all active/obtained profiles
+            state.categories.forEach(cat => {
+                const activeOpt = cat.options.find(o => o.isActive);
+                if (activeOpt) {
+                    const subEl = document.getElementById(`sub-${cat.id}`);
+                    if (subEl) {
+                        subEl.innerText = `${activeOpt.name} (R${activeOpt.normalPrice.toLocaleString('en-ZA')})`;
+                    }
+                }
+
+                cat.options.forEach(opt => {
+                    if (opt.isActive) {
+                        activeNormalSum += opt.normalPrice;
+                        const bfPriceToUse = (opt.bfPrice !== undefined && opt.bfPrice > 0) ? opt.bfPrice : opt.normalPrice;
+                        activeBFSum += bfPriceToUse;
+                        
+                        if (opt.isPurchased) {
+                            totalSpentSum += opt.normalPrice;
+                        }
+                    } else if (opt.isPurchased) {
+                        totalSpentSum += opt.normalPrice;
+                    }
+                });
+            });
+
+            // Update header boxes
+            document.getElementById('summary-normal').innerText = `R${activeNormalSum.toLocaleString('en-ZA')}`;
+            document.getElementById('summary-bf').innerText = `R${activeBFSum.toLocaleString('en-ZA')}`;
+            document.getElementById('summary-spent').innerText = `R${totalSpentSum.toLocaleString('en-ZA')}`;
+
+            // Net targets
+            const netRemaining = Math.max(0, activeNormalSum - totalSpentSum);
+            document.getElementById('net-remaining-target').innerText = `R${netRemaining.toLocaleString('en-ZA')}`;
+
+            renderShoppingPlanner(totalSpentSum);
+            updateTimeline(netRemaining);
+        }
+
+        // R8,000 Shopping Planner Suggestions Logic
+        function renderShoppingPlanner(spentSoFar) {
+            const plannerContainer = document.getElementById('shopping-suggestions');
+            plannerContainer.innerHTML = '';
+
+            const initialCash = 8000;
+            const remainingCashPool = Math.max(0, initialCash - spentSoFar);
+
+            // Fetch list of active options NOT purchased yet, sorted cheapest first
+            let unpurchasedActives = [];
+            state.categories.forEach(cat => {
+                cat.options.forEach(opt => {
+                    if (opt.isActive && !opt.isPurchased) {
+                        unpurchasedActives.push({
+                            catId: cat.id,
+                            catTitle: cat.title,
+                            optId: opt.id,
+                            optName: opt.name,
+                            price: opt.normalPrice
+                        });
+                    }
+                });
+            });
+
+            unpurchasedActives.sort((a, b) => a.price - b.price);
+
+            if (spentSoFar >= initialCash) {
+                plannerContainer.innerHTML = `
+                    <div class="p-3 bg-emerald-950/40 border border-emerald-500/20 rounded-xl text-emerald-300">
+                        <i class="fa-solid fa-circle-check"></i> R8,000 fully deployed! Your skeleton components are locking in cleanly.
+                    </div>
+                `;
+                return;
+            }
+
+            plannerContainer.innerHTML += `
+                <div class="flex justify-between items-center mb-2 bg-slate-950 p-2 rounded-lg text-slate-400">
+                    <span>Remaining Starter Cash:</span>
+                    <span class="font-extrabold text-emerald-400">R${remainingCashPool.toLocaleString('en-ZA')}</span>
+                </div>
+            `;
+
+            let suggestionsHTML = '<div class="space-y-2">';
+            let tempPool = remainingCashPool;
+            let suggestCount = 0;
+
+            unpurchasedActives.forEach(item => {
+                if (item.price <= tempPool && item.price > 0) {
+                    tempPool -= item.price;
+                    suggestCount++;
+                    suggestionsHTML += `
+                        <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-2 rounded-lg">
+                            <div>
+                                <span class="text-[10px] text-blue-400 font-bold block">${item.catTitle}</span>
+                                <span class="text-[11px] text-white font-medium truncate max-w-[150px] inline-block">${item.optName}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-slate-200">R${item.price.toLocaleString('en-ZA')}</span>
+                                <button onclick="togglePurchased('${item.catId}', '${item.optId}')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2 py-1 rounded font-bold">Secure</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            suggestionsHTML += '</div>';
+
+            if (suggestCount === 0) {
+                plannerContainer.innerHTML += `
+                    <p class="text-[10px] text-slate-500 italic mt-1">
+                        No individual active component left matches your remaining starter pool of R${remainingCashPool.toLocaleString('en-ZA')}. Add monthly savings to secure larger components!
+                    </p>
+                `;
+            } else {
+                plannerContainer.innerHTML += suggestionsHTML;
+            }
+        }
+
+        // Core dynamic timeline logic
+        function updateTimeline(remainingTarget) {
+            const novSavingsLimit = 38000;
+            const decSavingsLimit = 43000;
+            const janTotalCap = 65451.27;
+
+            // Update pools displayed in the right column
+            document.getElementById('november-pool').innerText = `R${novSavingsLimit.toLocaleString('en-ZA')}`;
+
+            const decDot = document.getElementById('milestone-dot-dec');
+            const decTitle = document.getElementById('milestone-title-dec');
+            const decText = document.getElementById('dec-status-text');
+
+            const janDot = document.getElementById('milestone-dot-jan');
+            const janTitle = document.getElementById('milestone-title-jan');
+
+            if (remainingTarget <= (decSavingsLimit - 8000)) {
+                decDot.className = "absolute -left-[31px] top-1 w-4.5 h-4.5 rounded-full border-4 border-slate-900 bg-emerald-500 shadow-md shadow-emerald-500/20";
+                decTitle.className = "font-bold text-emerald-400";
+                decText.innerHTML = `<strong>Early Dec Launch Confirmed!</strong> Your remaining target clears your December reserve pool.`;
+            } else {
+                decDot.className = "absolute -left-[31px] top-1 w-4.5 h-4.5 rounded-full border-4 border-slate-900 bg-amber-500 shadow-md shadow-amber-500/20";
+                decTitle.className = "font-bold text-amber-500";
+                const gap = remainingTarget - (decSavingsLimit - 8000);
+                decText.innerHTML = `Over December limits by <span class="font-bold text-amber-400">R${gap.toLocaleString('en-ZA')}</span>. Move items to Obtained, look for Black Friday cuts, or wait for January.`;
+            }
+
+            // January clearance validation
+            if (remainingTarget <= (janTotalCap - 8000)) {
+                janDot.className = "absolute -left-[31px] top-1 w-4.5 h-4.5 rounded-full border-4 border-slate-900 bg-emerald-500";
+                janTitle.className = "font-bold text-emerald-400";
+            } else {
+                janDot.className = "absolute -left-[31px] top-1 w-4.5 h-4.5 rounded-full border-4 border-slate-900 bg-rose-600 animate-pulse";
+                janTitle.className = "font-bold text-rose-500";
+            }
+        }
+
+        // Launch Application & load saved configurations if available
+        window.onload = function() {
+            const savedState = localStorage.getItem('za_pc_builder_state_v2');
+            if (savedState) {
+                try {
+                    state = JSON.parse(savedState);
+                } catch(e) {
+                    console.error("Failed to parse saved state, reverting to defaults.", e);
+                    state = JSON.parse(JSON.stringify(defaultBlueprint));
+                }
+            } else {
+                state = JSON.parse(JSON.stringify(defaultBlueprint));
+            }
+            renderApp();
+        };
+    </script>
+
+</body>
+</html>

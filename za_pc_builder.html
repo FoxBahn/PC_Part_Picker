@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZA Custom PC Matrix & Timeline</title>
     <!-- Tailwind CSS v4 Browser Compiler -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { 
@@ -85,6 +85,24 @@
                     </button>
                 </div>
 
+                <!-- Historical Discount Rates Guide -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-xs space-y-3 shadow-lg">
+                    <h3 class="font-bold text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-tags text-amber-400"></i> Historical SA Markdowns
+                    </h3>
+                    <p class="text-[11px] leading-relaxed text-slate-400">
+                        The app estimates Black Friday targets using real historical averages from local South African importers:
+                    </p>
+                    <div class="grid grid-cols-2 gap-2 text-[10px] bg-slate-950 p-2.5 rounded-xl border border-slate-800/60">
+                        <div class="flex justify-between"><span class="text-slate-400">CPUs:</span><span class="text-emerald-400 font-bold">-8%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">GPUs:</span><span class="text-emerald-400 font-bold">-10%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">RAM:</span><span class="text-emerald-400 font-bold">-18%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">SSDs:</span><span class="text-emerald-400 font-bold">-20%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Coolers:</span><span class="text-emerald-400 font-bold">-15%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">PSUs:</span><span class="text-emerald-400 font-bold">-12%</span></div>
+                    </div>
+                </div>
+
                 <!-- Android Integration Notice -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-xs space-y-2 text-slate-400">
                     <h3 class="font-bold text-white flex items-center gap-1.5">
@@ -101,15 +119,27 @@
     </div>
 
     <script>
-        // --- 1. Centralized Core Blueprint State ---
+        // --- 1. Historical South African Black Friday Markdown Matrix ---
+        const categoryDiscountRates = {
+            'CPU': 0.08,          // -8% off CPUs
+            'GPU': 0.10,          // -10% off GPUs
+            'Motherboard': 0.07,  // -7% off Motherboards
+            'RAM': 0.18,          // -18% off RAM (High volatility)
+            'Cooler': 0.15,       // -15% off Coolers
+            'Power Supply': 0.12, // -12% off PSUs
+            'Storage': 0.20,      // -20% off SSDs (highly competitive)
+            'Chassis': 0.15       // -15% off Cases
+        };
+
+        // --- 2. Centralized Core Blueprint State ---
         const defaultBlueprint = [
             {
                 category: 'CPU',
                 title: 'Processor (CPU)',
                 icon: 'fa-microchip',
                 options: [
-                    { id: 'cpu-1', active: true, name: 'Ryzen 5 9600X', price: 4499, bfPrice: 4199, obtained: false, note: 'Targeting Zen 5 flagship budget performance' },
-                    { id: 'cpu-2', active: false, name: 'Ryzen 5 7600', price: 4200, bfPrice: 3600, obtained: false, note: 'Alternative fallback choice' }
+                    { id: 'cpu-1', active: true, name: 'Ryzen 5 9600X', price: 4499, bfPrice: 4139, autoBF: true, obtained: false, note: 'Targeting Zen 5 flagship budget performance' },
+                    { id: 'cpu-2', active: false, name: 'Ryzen 5 7600', price: 4200, bfPrice: 3864, autoBF: true, obtained: false, note: 'Alternative fallback choice' }
                 ]
             },
             {
@@ -117,8 +147,8 @@
                 title: 'Graphics Card (GPU)',
                 icon: 'fa-images',
                 options: [
-                    { id: 'gpu-1', active: true, name: 'Radeon RX 9070 XT 16GB', price: 14999, bfPrice: 13499, obtained: false, note: 'Wootware listing - 16GB VRAM on a 256-bit bus width' },
-                    { id: 'gpu-2', active: false, name: 'RTX 5070 Ti 16GB GDDR7', price: 18799, bfPrice: 16999, obtained: false, note: 'Palit alternative model' }
+                    { id: 'gpu-1', active: true, name: 'Radeon RX 9070 XT 16GB', price: 14999, bfPrice: 13499, autoBF: true, obtained: false, note: 'Wootware listing - 16GB VRAM on a 256-bit bus width' },
+                    { id: 'gpu-2', active: false, name: 'RTX 5070 Ti 16GB GDDR7', price: 18799, bfPrice: 16919, autoBF: true, obtained: false, note: 'Palit alternative model' }
                 ]
             },
             {
@@ -126,7 +156,7 @@
                 title: 'Motherboard',
                 icon: 'fa-server',
                 options: [
-                    { id: 'mobo-1', active: true, name: 'Sapphire NITRO+ B850M Wi-Fi', price: 3199, bfPrice: 2999, obtained: false, note: 'Excellent power delivery phase and styling matching mATX setup' }
+                    { id: 'mobo-1', active: true, name: 'Sapphire NITRO+ B850M Wi-Fi', price: 3199, bfPrice: 2975, autoBF: true, obtained: false, note: 'Excellent power delivery phase and styling matching mATX setup' }
                 ]
             },
             {
@@ -134,7 +164,7 @@
                 title: 'RAM (Memory)',
                 icon: 'fa-memory',
                 options: [
-                    { id: 'ram-1', active: true, name: 'XPG Lancer Neon RGB 32GB (2x16) 6000', price: 8699, bfPrice: 1999, obtained: false, note: 'Dual Channel EXPO speed sweet spot' }
+                    { id: 'ram-1', active: true, name: 'XPG Lancer Neon RGB 32GB (2x16) 6000', price: 8699, bfPrice: 7133, autoBF: true, obtained: false, note: 'Dual Channel EXPO speed sweet spot' }
                 ]
             },
             {
@@ -142,7 +172,7 @@
                 title: 'CPU Cooler',
                 icon: 'fa-snowflake',
                 options: [
-                    { id: 'cooler-1', active: true, name: 'ID-Cooling FROZN A620 PRO SE', price: 849, bfPrice: 749, obtained: false, note: '154mm height clears the chassis panel limits comfortably' }
+                    { id: 'cooler-1', active: true, name: 'ID-Cooling FROZN A620 PRO SE', price: 849, bfPrice: 722, autoBF: true, obtained: false, note: '154mm height clears the chassis panel limits comfortably' }
                 ]
             },
             {
@@ -150,7 +180,7 @@
                 title: 'Power Supply (PSU)',
                 icon: 'fa-plug',
                 options: [
-                    { id: 'psu-1', active: true, name: 'Super Flower Leadex III GE 850W ATX 3.1', price: 2199, bfPrice: 1899, obtained: false, note: 'ATX 3.1 / PCI-E 5.1 native power lines to prevent GPU trips' }
+                    { id: 'psu-1', active: true, name: 'Super Flower Leadex III GE 850W ATX 3.1', price: 2199, bfPrice: 1935, autoBF: true, obtained: false, note: 'ATX 3.1 / PCI-E 5.1 native power lines to prevent GPU trips' }
                 ]
             },
             {
@@ -158,7 +188,7 @@
                 title: 'Storage (SSD)',
                 icon: 'fa-database',
                 options: [
-                    { id: 'ssd-1', active: true, name: 'Kioxia Exceria Plus G4 1TB Gen4', price: 2300, bfPrice: 1800, obtained: false, note: 'Ultra fast read and write data pipeline' }
+                    { id: 'ssd-1', active: true, name: 'Kioxia Exceria Plus G4 1TB Gen4', price: 2300, bfPrice: 1840, autoBF: true, obtained: false, note: 'Ultra fast read and write data pipeline' }
                 ]
             },
             {
@@ -166,14 +196,14 @@
                 title: 'Chassis (Case)',
                 icon: 'fa-box',
                 options: [
-                    { id: 'case-1', active: true, name: 'Lian Li A3-mATX Black', price: 1599, bfPrice: 1499, obtained: false, note: 'Compact layout compatible with standard ATX power units' }
+                    { id: 'case-1', active: true, name: 'Lian Li A3-mATX Black', price: 1599, bfPrice: 1359, autoBF: true, obtained: false, note: 'Compact layout compatible with standard ATX power units' }
                 ]
             }
         ];
 
         let state = [];
 
-        // --- 2. Dynamic View Rendering Engine ---
+        // --- 3. Dynamic View Rendering Engine ---
         function renderApp() {
             const container = document.getElementById('component-container');
             container.innerHTML = '';
@@ -204,6 +234,10 @@
                     const row = document.createElement('div');
                     row.className = `p-3.5 rounded-xl border transition flex flex-col gap-3 ${opt.active ? 'border-blue-500/50 bg-blue-950/10' : 'border-slate-800/80 bg-slate-950/40'}`;
                     
+                    // Dynamic calculation of current markdown percentage for display
+                    const markdownPercent = opt.price > 0 ? Math.round(((opt.price - opt.bfPrice) / opt.price) * 100) : 0;
+                    const discountLabel = opt.autoBF ? `${markdownPercent}% Est.` : `${markdownPercent}% Custom`;
+
                     row.innerHTML = `
                         <!-- Core Settings Grid -->
                         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
@@ -238,12 +272,20 @@
                                     class="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1.5 text-xs font-bold text-emerald-400 w-full text-right focus:border-blue-500 focus:outline-none">
                             </div>
 
-                            <!-- Black Friday Predicted Box -->
-                            <div class="md:col-span-2 flex items-center gap-1.5">
+                            <!-- Black Friday Predicted Box & Smart Lock -->
+                            <div class="md:col-span-2 flex items-center gap-1">
                                 <span class="text-[10px] text-slate-500 uppercase font-bold block shrink-0">BF R</span>
-                                <input type="number" value="${opt.bfPrice}" 
-                                    oninput="updateOptionField(${catIdx}, ${optIdx}, 'bfPrice', this.value)"
-                                    class="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1.5 text-xs font-bold text-amber-400 w-full text-right focus:border-blue-500 focus:outline-none">
+                                <div class="relative w-full flex items-center">
+                                    <input type="number" value="${opt.bfPrice}" 
+                                        oninput="updateOptionFieldManual(${catIdx}, ${optIdx}, this.value)"
+                                        class="bg-slate-900 border border-slate-800 rounded-lg pl-1.5 pr-7 py-1.5 text-xs font-bold text-amber-400 w-full text-right focus:border-blue-500 focus:outline-none">
+                                    <!-- Toggle Auto Engine Lock Icon -->
+                                    <button onclick="toggleAutoBF(${catIdx}, ${optIdx})" 
+                                            class="absolute right-1 text-[10px] p-1 ${opt.autoBF ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-500 hover:text-slate-400'}" 
+                                            title="${opt.autoBF ? 'Smart Auto-BF active (Estimating). Click to manual lock.' : 'Manual lock active. Click to estimate automatically.'}">
+                                        <i class="fa-solid ${opt.autoBF ? 'fa-lock-open' : 'fa-lock'}"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Delete Option Control -->
@@ -254,15 +296,21 @@
                             </div>
                         </div>
 
-                        <!-- Notes Area (Sits Below Option Row) -->
-                        <div class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-900">
-                            <span class="text-[10px] text-blue-400 font-extrabold uppercase shrink-0">
-                                <i class="fa-solid fa-pen-to-square"></i> Note:
+                        <!-- Notes Area & Discount Indicator Badge -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-2 rounded-lg border border-slate-900">
+                            <div class="flex items-center gap-2 w-full">
+                                <span class="text-[10px] text-blue-400 font-extrabold uppercase shrink-0">
+                                    <i class="fa-solid fa-pen-to-square"></i> Note:
+                                </span>
+                                <input type="text" placeholder="Add custom shopping links, alternative stores, or warranty info..." 
+                                    value="${opt.note || ''}"
+                                    oninput="updateOptionField(${catIdx}, ${optIdx}, 'note', this.value)"
+                                    class="bg-transparent border-none text-xs text-slate-300 placeholder-slate-700 w-full focus:outline-none p-0">
+                            </div>
+                            <!-- Dynamic Discount Badge -->
+                            <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full shrink-0 text-center ${opt.autoBF ? 'bg-emerald-950/80 border border-emerald-500/20 text-emerald-400' : 'bg-amber-950/80 border border-amber-500/20 text-amber-400'}" id="badge-${opt.id}">
+                                <i class="fa-solid ${opt.autoBF ? 'fa-wand-magic-sparkles' : 'fa-hand'} mr-1"></i>${discountLabel}
                             </span>
-                            <input type="text" placeholder="Add custom shopping links, alternative stores, or warranty info..." 
-                                value="${opt.note || ''}"
-                                oninput="updateOptionField(${catIdx}, ${optIdx}, 'note', this.value)"
-                                class="bg-transparent border-none text-xs text-slate-300 placeholder-slate-700 w-full focus:outline-none p-0">
                         </div>
                     `;
                     optionsList.appendChild(row);
@@ -274,14 +322,16 @@
             calculateTotals();
         }
 
-        // --- 3. Interactive State Handlers ---
+        // --- 4. Interactive State Handlers ---
         function addOption(catIdx) {
+            // New option defaults to R0 but registers with dynamic autoBF true
             state[catIdx].options.push({
                 id: 'opt-' + Date.now(),
                 active: false,
                 name: 'New Custom Variant',
                 price: 0,
                 bfPrice: 0,
+                autoBF: true,
                 obtained: false,
                 note: ''
             });
@@ -319,24 +369,83 @@
             renderApp();
         }
 
-        function updateOptionField(catIdx, optIdx, field, val) {
-            if (field === 'price' || field === 'bfPrice') {
-                state[catIdx].options[optIdx][field] = Math.max(0, parseFloat(val) || 0);
-            } else {
-                state[catIdx].options[optIdx][field] = val;
+        // Toggles lock vs unlock (Auto vs Manual BF estimation)
+        function toggleAutoBF(catIdx, optIdx) {
+            const opt = state[catIdx].options[optIdx];
+            opt.autoBF = !opt.autoBF;
+            
+            if (opt.autoBF) {
+                // Instantly run estimation
+                const categoryKey = state[catIdx].category;
+                const rate = categoryDiscountRates[categoryKey] || 0.10;
+                opt.bfPrice = Math.round(opt.price * (1 - rate));
             }
-            // Save state immediately and run calculation silently to preserve input focus
+            
             saveToLocalStorage();
-            calculateTotalsSilent();
+            renderApp();
         }
 
-        // --- 4. Math & LocalStorage Synchronization ---
+        // Standard updates (e.g. name, retail price)
+        function updateOptionField(catIdx, optIdx, field, val) {
+            const opt = state[catIdx].options[optIdx];
+            
+            if (field === 'price') {
+                opt.price = Math.max(0, parseFloat(val) || 0);
+                // If Auto Mode is active, dynamically update predicted BF
+                if (opt.autoBF) {
+                    const categoryKey = state[catIdx].category;
+                    const rate = categoryDiscountRates[categoryKey] || 0.10;
+                    opt.bfPrice = Math.round(opt.price * (1 - rate));
+                }
+            } else if (field === 'bfPrice') {
+                opt.bfPrice = Math.max(0, parseFloat(val) || 0);
+            } else {
+                opt[field] = val;
+            }
+            
+            saveToLocalStorage();
+            calculateTotalsSilent();
+            updateRowBadge(catIdx, optIdx);
+        }
+
+        // Updates BF field manually - breaks away from the Auto Estimator lock
+        function updateOptionFieldManual(catIdx, optIdx, val) {
+            const opt = state[catIdx].options[optIdx];
+            opt.bfPrice = Math.max(0, parseFloat(val) || 0);
+            opt.autoBF = false; // Disable auto-mode because user chose to override
+            
+            saveToLocalStorage();
+            calculateTotalsSilent();
+            updateRowBadge(catIdx, optIdx);
+        }
+
+        // Redraws just the small badge to prevent layout reload focus loss
+        function updateRowBadge(catIdx, optIdx) {
+            const opt = state[catIdx].options[optIdx];
+            const badge = document.getElementById(`badge-${opt.id}`);
+            if (badge) {
+                const markdownPercent = opt.price > 0 ? Math.round(((opt.price - opt.bfPrice) / opt.price) * 100) : 0;
+                
+                badge.className = `text-[9px] font-extrabold px-2 py-0.5 rounded-full shrink-0 text-center ${opt.autoBF ? 'bg-emerald-950/80 border border-emerald-500/20 text-emerald-400' : 'bg-amber-950/80 border border-amber-500/20 text-amber-400'}`;
+                badge.innerHTML = `<i class="fa-solid ${opt.autoBF ? 'fa-wand-magic-sparkles' : 'fa-hand'} mr-1"></i>${opt.autoBF ? `${markdownPercent}% Est.` : `${markdownPercent}% Custom`}`;
+            }
+        }
+
+        // --- 5. Math & LocalStorage Synchronization ---
         function calculateTotalsSilent() {
             let totalNormal = 0;
             let totalBF = 0;
             let totalSpent = 0;
 
             state.forEach(cat => {
+                const activeOpt = cat.options.find(o => o.active);
+                if (activeOpt) {
+                    const subEl = document.getElementById(`sub-${cat.id}`);
+                    if (subEl) {
+                        subEl.innerText = `${activeOpt.name} (R${activeOpt.price.toLocaleString('en-ZA')})`;
+                    }
+                }
+
                 cat.options.forEach(opt => {
                     if (opt.active) {
                         totalNormal += opt.price;
@@ -381,7 +490,7 @@
             renderApp();
         }
 
-        // --- 5. Clean Setup Actions ---
+        // --- 6. Clean Setup Actions ---
         document.getElementById('reset-btn').addEventListener('click', () => {
             if(confirm("Are you sure you want to revert to the default blueprint layout? Any custom entries or notes will be permanently cleared.")) {
                 localStorage.removeItem('za_pc_builder_snap_state');

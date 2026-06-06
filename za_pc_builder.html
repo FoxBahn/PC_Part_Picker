@@ -1,6 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- 
+      ======================================================================================
+      SYSTEM BACKGROUND & HANDOVER DESCRIPTION
+      --------------------------------------------------------------------------------------
+      PROJECT CODENAME: SA Living Room PS6-Killer Rig
+      
+      CORE SYSTEM BLUEPRINT:
+      - CPU: AMD Ryzen 5 9600X (6-Core / 12-Thread Zen 5 Socket AM5)
+      - Motherboard: Sapphire NITRO+ AMD B850M Wi-Fi (Micro-ATX profile)
+      - RAM: XPG Lancer Neon RGB 32GB (2x16GB) DDR5-6000 CL30 EXPO
+      - Cooler: ID-Cooling FROZN A620 PRO SE Black (154mm tall, dual-tower clearance)
+      - Storage: Kioxia Exceria Plus G4 1TB PCIe Gen4 NVMe M.2 SSD
+      - PSU: Super Flower Leadex III GE 850W 80+ Gold (ATX 3.1 / PCIe 5.1 Native native cables)
+      - Chassis: Lian Li A3-mATX Wood-Accent Black Tempered Glass Micro-Tower
+      - Target GPU: Radeon RX 9070 XT (16GB, 256-bit bus) or GeForce RTX 5070 Ti (16GB GDDR7, 256-bit bus)
+      
+      FINANCIAL ROADMAP CRITERIA:
+      - Initial Available Pool: R8,000 (May 2026)
+      - Monthly Savings Contribution: R5,000/month (Beginning June 2026)
+      - January 2027 Lump-Sum Injection: R17,451.27
+      - Accumulation Targets: November (Black Friday Sales window) & December (Target Assembly date)
+      
+      APPLICATION FEATURES:
+      1. Centralized state-driven component and alternative option configuration.
+      2. Automated, category-specific Black Friday discount estimators modeled on South African retail history.
+      3. Focus-preserving interactive input fields with instant recalculation.
+      4. Auto/Manual discount override locks.
+      5. Offline persistence syncing directly with browser LocalStorage.
+      ======================================================================================
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZA Custom PC Matrix & Timeline</title>
@@ -121,7 +151,46 @@
             </div>
 
         </div>
-    </div>
+
+        <!-- AI Handover Brief & Core Project Background (Visually Elegant Bottom Panel) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-blue-400"></i> Core Project Blueprint & AI Handover Brief
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300 leading-relaxed">
+                <div class="space-y-2">
+                    <h4 class="font-bold text-white uppercase text-[11px] tracking-wider text-blue-400">Project Strategy</h4>
+                    <p>
+                        This matrix tracks a customized South African high-end desktop assembly profile engineered to act as a "PS6-Killer". It targets advanced 1440p and entry 4K asset streaming with 16GB of dedicated VRAM on a 256-bit bus structure.
+                    </p>
+                    <p>
+                        <strong>Hardware Base:</strong> AMD Ryzen 5 9600X, Sapphire NITRO+ B850M, XPG Lancer Neon 32GB DDR5-6000, ID-Cooling dual-tower air cooler, Kioxia Exceria Plus 1TB Gen4 SSD, and Super Flower Leadex III 850W ATX 3.1 PSU inside a Lian Li A3-mATX mini-chassis.
+                    </p>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-white uppercase text-[11px] tracking-wider text-emerald-400">Capital Plan</h4>
+                    <p>
+                        <strong>Starter Allocation:</strong> R8,000 starting cash actively deployed to capture initial skeleton parts.
+                    </p>
+                    <p>
+                        <strong>Monthly Savings Stream:</strong> R5,000 per month starting June 2026, supplemented by a final planned injection of R17,451.27 in January 2027 to finalize GPU acquisition and secondary drives.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Instant Copy-Paste Box for new chats -->
+            <div class="mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                        <i class="fa-solid fa-copy text-blue-400"></i> Handover String (Click inside to highlight)
+                    </span>
+                    <span class="text-[9px] text-slate-500 font-mono">UTF-8 Schema</span>
+                </div>
+                <textarea readonly onclick="this.select()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-[10px] text-slate-400 font-mono focus:ring-0 focus:outline-none resize-none h-24">I am building a South African "PS6-Killer" desktop. Specification blueprint: Ryzen 5 9600X, Sapphire NITRO+ B850M Wi-Fi, 32GB XPG Lancer Neon DDR5-6000 memory, ID-Cooling FROZN A620 SE cooler, Kioxia G4 1TB SSD, Super Flower Leadex III 850W ATX 3.1 PSU, Lian Li A3-mATX Case. Core GPUs monitored are the RX 9070 XT or RTX 5070 Ti. Capital: R8,000 starting May 2026, + R5,000/month savings starting June 2026, + a final lump sum of R17,451.27 in January 2027. We built a local storage-synchronized price matrix with category-specific South African Black Friday auto-discount estimation variables inside this index.html. Please preserve the dynamic JS object layout and state models on future edits.</textarea>
+            </div>
+        </div>
+
+    </div><!-- end of max-w-6xl -->
 
     <script>
         // --- 1. Historical South African Black Friday Markdown Matrix ---
@@ -362,6 +431,7 @@
             renderApp();
         }
 
+        // Toggle obtained state (checkbox)
         function toggleObtained(catIdx, optIdx) {
             state[catIdx].options[optIdx].obtained = !state[catIdx].options[optIdx].obtained;
             // Force option active if obtained
@@ -501,6 +571,7 @@
             localStorage.setItem('za_pc_builder_snap_state', JSON.stringify(state));
         }
 
+        // Loads data or initializes default snapshot
         function loadFromLocalStorage() {
             const saved = localStorage.getItem('za_pc_builder_snap_state');
             if (saved) {

@@ -80,7 +80,12 @@
                         </div>
                     </div>
 
-                    <button id="reset-btn" class="w-full bg-rose-950/20 hover:bg-rose-900/40 border border-rose-800/50 text-rose-300 text-xs py-2.5 rounded-xl transition font-semibold">
+                    <!-- RECALCULATE DYNAMIC DISCOUNTS -->
+                    <button onclick="recalculateAllDiscounts()" class="w-full bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500 text-blue-300 text-xs py-2.5 rounded-xl transition font-semibold">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Recalculate All Auto-Discounts
+                    </button>
+
+                    <button id="reset-btn" class="w-full bg-rose-950/20 hover:bg-rose-900/40 border border-rose-800/50 text-rose-300 text-xs py-2 rounded-xl transition font-semibold">
                         Clear Cache & Reset Build
                     </button>
                 </div>
@@ -272,11 +277,11 @@
                                     class="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1.5 text-xs font-bold text-emerald-400 w-full text-right focus:border-blue-500 focus:outline-none">
                             </div>
 
-                            <!-- Black Friday Predicted Box & Smart Lock -->
+                            <!-- Black Friday Predicted Box & Smart Lock (Direct Binding ID Added) -->
                             <div class="md:col-span-2 flex items-center gap-1">
                                 <span class="text-[10px] text-slate-500 uppercase font-bold block shrink-0">BF R</span>
                                 <div class="relative w-full flex items-center">
-                                    <input type="number" value="${opt.bfPrice}" 
+                                    <input type="number" id="bf-input-${opt.id}" value="${opt.bfPrice}" 
                                         oninput="updateOptionFieldManual(${catIdx}, ${optIdx}, this.value)"
                                         class="bg-slate-900 border border-slate-800 rounded-lg pl-1.5 pr-7 py-1.5 text-xs font-bold text-amber-400 w-full text-right focus:border-blue-500 focus:outline-none">
                                     <!-- Toggle Auto Engine Lock Icon -->
@@ -396,6 +401,12 @@
                     const categoryKey = state[catIdx].category;
                     const rate = categoryDiscountRates[categoryKey] || 0.10;
                     opt.bfPrice = Math.round(opt.price * (1 - rate));
+                    
+                    // Directly write to the DOM element to keep dynamic updates smooth without losing focus
+                    const bfInput = document.getElementById(`bf-input-${opt.id}`);
+                    if (bfInput) {
+                        bfInput.value = opt.bfPrice;
+                    }
                 }
             } else if (field === 'bfPrice') {
                 opt.bfPrice = Math.max(0, parseFloat(val) || 0);
@@ -429,6 +440,21 @@
                 badge.className = `text-[9px] font-extrabold px-2 py-0.5 rounded-full shrink-0 text-center ${opt.autoBF ? 'bg-emerald-950/80 border border-emerald-500/20 text-emerald-400' : 'bg-amber-950/80 border border-amber-500/20 text-amber-400'}`;
                 badge.innerHTML = `<i class="fa-solid ${opt.autoBF ? 'fa-wand-magic-sparkles' : 'fa-hand'} mr-1"></i>${opt.autoBF ? `${markdownPercent}% Est.` : `${markdownPercent}% Custom`}`;
             }
+        }
+
+        // Dynamic Sweep to calculate all active auto BF items in the system
+        function recalculateAllDiscounts() {
+            state.forEach(cat => {
+                const categoryKey = cat.category;
+                const rate = categoryDiscountRates[categoryKey] || 0.10;
+                cat.options.forEach(opt => {
+                    if (opt.autoBF) {
+                        opt.bfPrice = Math.round(opt.price * (1 - rate));
+                    }
+                });
+            });
+            saveToLocalStorage();
+            renderApp(); // Complete visual recalculation re-render
         }
 
         // --- 5. Math & LocalStorage Synchronization ---

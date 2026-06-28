@@ -163,6 +163,38 @@
   .bf-row span:first-child { color: var(--muted); }
   .bf-row span:last-child { font-family: var(--mono); font-weight: 700; color: var(--green); }
 
+  /* ── Procurement Scenarios ── */
+  .scenarios { margin-top: 28px; }
+  .scenarios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+  .scenario-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+  .scenario-card.highlight { border-color: var(--cyan); background: #041820; }
+  .scenario-title { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px; }
+  .scenario-subtitle { font-size: 11px; color: var(--muted); margin-bottom: 16px; }
+  .phase-block { margin-bottom: 14px; }
+  .phase-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 8px; border-radius: 5px; display: inline-block; margin-bottom: 8px; }
+  .phase-label.now  { background: #0f2d1a; color: #34d399; border: 1px solid #166534; }
+  .phase-label.wait { background: #1c1200; color: #f59e0b; border: 1px solid #78350f; }
+  .phase-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid var(--border); gap: 8px; }
+  .phase-item:last-child { border-bottom: none; }
+  .phase-item-left { flex: 1; min-width: 0; }
+  .phase-item-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .phase-item-sub  { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .phase-item-right { text-align: right; flex-shrink: 0; }
+  .price-main { font-family: var(--mono); font-size: 13px; font-weight: 700; }
+  .price-row  { font-family: var(--mono); font-size: 11px; margin-top: 2px; }
+  .afford-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; display: inline-block; margin-top: 3px; }
+  .afford-tag.green { background: #052e16; color: #34d399; }
+  .afford-tag.amber { background: #1c1200; color: #f59e0b; }
+  .afford-tag.blue  { background: #0f1e3d; color: #60a5fa; }
+  .scenario-total { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border2); display: flex; justify-content: space-between; align-items: center; }
+  .scenario-total-label { font-size: 11px; color: var(--muted); }
+  .scenario-total-val { font-family: var(--mono); font-size: 15px; font-weight: 700; }
+  .scenario-saving { margin-top: 6px; display: flex; justify-content: space-between; align-items: center; }
+  .scenario-saving-label { font-size: 10px; color: var(--muted); }
+  .scenario-saving-val { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--green); }
+  .bf-risk-note { margin-top: 10px; font-size: 10px; color: var(--muted); line-height: 1.5; padding: 8px 10px; background: var(--surface2); border-radius: 8px; border-left: 2px solid var(--amber); }
+  @media (max-width: 620px) { .scenarios-grid { grid-template-columns: 1fr; } }
+
   /* ── Footer ── */
   .footer-note {
     margin-top: 24px; padding: 14px 18px;
@@ -430,6 +462,16 @@
   </div>
 </div>
 
+<!-- ══ PROCUREMENT SCENARIOS ══ -->
+<div class="scenarios">
+  <div class="section-label">Procurement Scenarios</div>
+  <p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+    Buying <strong style="color:#86efac">Case, PSU, CPU now</strong> as funds allow.
+    Holding <strong style="color:#fcd34d">RAM, Storage &amp; GPU</strong> — comparing retail-now vs waiting for Black Friday (conservative −5% floor / historical peak discount).
+  </p>
+  <div class="scenarios-grid" id="scenarios-grid"></div>
+</div>
+
 <div class="footer-note">
   <strong>Handover context: </strong>
   Project AM5 SA rig · R8k start May 2026 · R5k/month from Jun 2026 · R17,451.27 lump sum Jan 2027 ·
@@ -690,6 +732,137 @@ function commitEdit(id) {
 }
 
 // ═══════════════════════════════════════════
+//  Procurement Scenarios
+// ═══════════════════════════════════════════
+function renderScenarios() {
+  const el = document.getElementById('scenarios-grid');
+  if (!el) return;
+
+  const F = state.financial;
+  const gpu = getGPU();
+
+  // Items to buy NOW (retail, phased)
+  const buyNow = [
+    { name: 'Lian Li A3-mATX', price: 1599, when: 'Jul 2026' },
+    { name: 'Super Flower 850W ATX 3.1', price: 2199, when: 'Jul 2026' },
+    { name: 'AMD Ryzen 5 9600X', price: 4199, when: 'Aug 2026' }
+  ];
+
+  // Items to hold — BF candidates
+  const holdItems = [
+    { name: 'XPG Lancer Blade RGB 32GB', retail: 8899, bfPeak: 0.18, bfFloor: 0.05 },
+    { name: 'Kioxia Exceria Plus G4 1TB', retail: 3299, bfPeak: 0.20, bfFloor: 0.05 },
+    { name: gpu ? gpu.name.split(' ').slice(0,4).join(' ') : 'GPU', retail: gpu ? gpu.retailZAR : 0, bfPeak: 0.10, bfFloor: 0.05 }
+  ];
+
+  const alreadySpent = 699 + 799 + 3199; // fans + cooler + mobo
+  const buyNowTotal = buyNow.reduce((s,i) => s + i.price, 0);
+
+  // Scenario A: buy everything at retail (no BF wait)
+  const holdRetail    = holdItems.reduce((s,i) => s + i.retail, 0);
+  const totalRetailA  = alreadySpent + buyNowTotal + holdRetail;
+
+  // Scenario B: hold RAM/SSD/GPU for BF (peak historical)
+  const holdBFPeak    = holdItems.reduce((s,i) => s + Math.round(i.retail*(1-i.bfPeak)), 0);
+  const totalBFPeak   = alreadySpent + buyNowTotal + holdBFPeak;
+  const savingPeak    = holdRetail - holdBFPeak;
+
+  // Scenario C: conservative BF (5% floor)
+  const holdBFFloor   = holdItems.reduce((s,i) => s + Math.round(i.retail*(1-i.bfFloor)), 0);
+  const totalBFFloor  = alreadySpent + buyNowTotal + holdBFFloor;
+  const savingFloor   = holdRetail - holdBFFloor;
+
+  // When can each savings rate afford the "buy now" chunk + hold retail total?
+  function affordTag(need, rate) {
+    const F2 = {...F, monthlyContrib: rate};
+    const months = [
+      [7,2026],[8,2026],[9,2026],[10,2026],[11,2026],[12,2026],[1,2027]
+    ];
+    for (const [m,y] of months) {
+      const n = monthsBetween(F2.startMonth, F2.startYear, m, y);
+      let pool = F2.startPool + n * rate;
+      const lumpN = monthsBetween(F2.startMonth, F2.startYear, F2.lumpSumMonth, F2.lumpSumYear);
+      if (n >= lumpN) pool += F2.lumpSumAmount;
+      if (pool >= need) return `${MONTHS[m]} ${y}`;
+    }
+    return 'After Jan 2027';
+  }
+
+  const rates = [
+    { label: 'R5k/month', rate: 5000, color: '#60a5fa', highlight: false },
+    { label: 'R10k/month', rate: 10000, color: '#22d3ee', highlight: true }
+  ];
+
+  el.innerHTML = rates.map(({label, rate, color, highlight}) => {
+    const buyNowHtml = buyNow.map(i => `
+      <div class="phase-item">
+        <div class="phase-item-left">
+          <div class="phase-item-name">${i.name}</div>
+          <div class="phase-item-sub">Buy at retail · target ${i.when}</div>
+        </div>
+        <div class="phase-item-right">
+          <div class="price-main" style="color:#f8fafc">${fmtZAR(i.price)}</div>
+          <div class="afford-tag green">${affordTag(alreadySpent + buyNow.slice(0, buyNow.indexOf(i)+1).reduce((s,x)=>s+x.price,0), rate)}</div>
+        </div>
+      </div>`).join('');
+
+    const holdHtml = holdItems.map(i => {
+      const bfPeakPrice = Math.round(i.retail*(1-i.bfPeak));
+      const bfFloorPrice = Math.round(i.retail*(1-i.bfFloor));
+      return `
+      <div class="phase-item">
+        <div class="phase-item-left">
+          <div class="phase-item-name">${i.name}</div>
+          <div class="phase-item-sub">Hold for Nov BF window</div>
+        </div>
+        <div class="phase-item-right">
+          <div class="price-row" style="color:var(--muted);text-decoration:line-through">${fmtZAR(i.retail)} retail</div>
+          <div class="price-row" style="color:#f59e0b">BF best: ${fmtZAR(bfPeakPrice)}</div>
+          <div class="price-row" style="color:#94a3b8">BF floor: ${fmtZAR(bfFloorPrice)}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `
+    <div class="scenario-card ${highlight ? 'highlight' : ''}">
+      <div class="scenario-title" style="color:${color}">${label} savings</div>
+      <div class="scenario-subtitle">${highlight ? '← redirecting car payment' : 'current plan'}</div>
+
+      <div class="phase-block">
+        <span class="phase-label now">Buy Now — Retail</span>
+        ${buyNowHtml}
+      </div>
+
+      <div class="phase-block">
+        <span class="phase-label wait">Hold for Black Friday</span>
+        ${holdHtml}
+      </div>
+
+      <div class="scenario-total">
+        <span class="scenario-total-label">Total if BF delivers</span>
+        <span class="scenario-total-val" style="color:${color}">${fmtZAR(totalBFPeak)}</span>
+      </div>
+      <div class="scenario-saving">
+        <span class="scenario-saving-label">vs buying everything retail</span>
+        <span class="scenario-saving-val">save ${fmtZAR(savingPeak)}</span>
+      </div>
+      <div class="scenario-total" style="margin-top:6px">
+        <span class="scenario-total-label">Total if BF disappoints (−5%)</span>
+        <span class="scenario-total-val" style="color:#94a3b8">${fmtZAR(totalBFFloor)}</span>
+      </div>
+      <div class="scenario-saving">
+        <span class="scenario-saving-label">conservative saving</span>
+        <span class="scenario-saving-val" style="color:#94a3b8">${fmtZAR(savingFloor)}</span>
+      </div>
+
+      <div class="bf-risk-note">
+        ⚠ BF discounts in SA are not guaranteed. Historical averages used as peak estimates. A conservative −5% floor assumes limited stock or late deals.
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
 //  Master render
 // ═══════════════════════════════════════════
 function render() {
@@ -698,6 +871,7 @@ function render() {
   renderBudget();
   renderHeader();
   renderTimeline();
+  renderScenarios();
 }
 
 render();

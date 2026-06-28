@@ -1,602 +1,706 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- 
-      ======================================================================================
-      SYSTEM BACKGROUND & HANDOVER DESCRIPTION
-      --------------------------------------------------------------------------------------
-      PROJECT CODENAME: SA Living Room PS6-Killer Rig
-      
-      CORE SYSTEM BLUEPRINT:
-      - CPU: AMD Ryzen 5 9600X (6-Core / 12-Thread Zen 5 Socket AM5)
-      - Motherboard: Sapphire NITRO+ AMD B850M Wi-Fi (Micro-ATX profile)
-      - RAM: XPG Lancer Neon RGB 32GB (2x16GB) DDR5-6000 CL30 EXPO
-      - Cooler: ID-Cooling FROZN A620 PRO SE Black (154mm tall, dual-tower clearance)
-      - Storage: Kioxia Exceria Plus G4 1TB PCIe Gen4 NVMe M.2 SSD
-      - PSU: Super Flower Leadex III GE 850W 80+ Gold (ATX 3.1 / PCIe 5.1 Native native cables)
-      - Chassis: Lian Li A3-mATX Wood-Accent Black Tempered Glass Micro-Tower
-      - Target GPU: Radeon RX 9070 XT (16GB, 256-bit bus) or GeForce RTX 5070 Ti (16GB GDDR7, 256-bit bus)
-      
-      FINANCIAL ROADMAP CRITERIA:
-      - Initial Available Pool: R8,000 (May 2026)
-      - Monthly Savings Contribution: R5,000/month (Beginning June 2026)
-      - January 2027 Lump-Sum Injection: R17,451.27
-      - Accumulation Targets: November (Black Friday Sales window) & December (Target Assembly date)
-      
-      APPLICATION FEATURES:
-      1. Centralized state-driven component and alternative option configuration.
-      2. Automated, category-specific Black Friday discount estimators modeled on South African retail history.
-      3. Focus-preserving interactive input fields with instant recalculation.
-      4. Auto/Manual discount override locks.
-      5. Offline persistence syncing directly with browser LocalStorage.
-      ======================================================================================
-    -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZA Custom PC Matrix & Timeline</title>
-    <!-- Tailwind CSS v4 Browser Compiler -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { 
-            background-color: #0f172a; 
-            color: #e2e8f0; 
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-        /* Style inputs nicely to feel like native elements on mobile */
-        input:focus {
-            outline: none;
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 1px #3b82f6;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project AM5 — ZA PC Build Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080c14;
+    --surface:   #0d1220;
+    --surface2:  #111827;
+    --border:    #1e2d3d;
+    --border2:   #243040;
+    --text:      #e2e8f0;
+    --muted:     #4a5568;
+    --dim:       #2d3748;
+    --cyan:      #22d3ee;
+    --green:     #10b981;
+    --green-dim: #052e16;
+    --amber:     #f59e0b;
+    --amber-dim: #1c1200;
+    --blue:      #3b82f6;
+    --blue-dim:  #0f1e3d;
+    --rose:      #f43f5e;
+    --mono:      'Space Mono', monospace;
+    --sans:      'Space Grotesk', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+    line-height: 1.5;
+  }
+
+  /* ── Layout ── */
+  .shell { max-width: 1040px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header { margin-bottom: 36px; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.25em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(100deg, #f8fafc 0%, #64748b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .header-stat { text-align: right; }
+  .stat-big { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--text); }
+  .stat-big span { font-size: 14px; color: var(--muted); }
+  .stat-label { font-size: 11px; color: var(--green); margin-top: 2px; }
+
+  /* ── Progress bar ── */
+  .runway { margin-top: 20px; }
+  .runway-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .runway-labels b { font-family: var(--mono); color: var(--amber); }
+  .bar-track { background: var(--surface2); border-radius: 99px; height: 8px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+
+  /* ── GPU selector ── */
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+  .gpu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .gpu-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px 18px; cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: left; width: 100%;
+  }
+  .gpu-card.active { border-color: var(--blue); background: var(--blue-dim); }
+  .gpu-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .gpu-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 5px; }
+  .gpu-badge.active { color: var(--cyan); }
+  .gpu-badge.inactive { color: var(--muted); }
+  .gpu-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .gpu-note { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .gpu-prices { text-align: right; flex-shrink: 0; }
+  .price-retail { font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--green); }
+  .price-bf { font-family: var(--mono); font-size: 11px; color: var(--amber); margin-top: 2px; }
+  .gpu-link { display: inline-block; font-size: 10px; color: var(--blue); margin-top: 8px; text-decoration: none; }
+  .gpu-link:hover { text-decoration: underline; }
+
+  /* ── Main grid ── */
+  .main-grid { display: grid; grid-template-columns: 1fr 296px; gap: 20px; align-items: start; }
+
+  /* ── Component list ── */
+  .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .bf-toggle {
+    font-size: 11px; font-weight: 700; padding: 5px 13px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--border2); background: transparent; color: var(--muted); transition: all 0.2s;
+  }
+  .bf-toggle.on { border-color: var(--amber); background: var(--amber-dim); color: var(--amber); }
+
+  .comp-list { display: flex; flex-direction: column; gap: 7px; }
+
+  .comp-row {
+    display: grid; grid-template-columns: 22px 28px 1fr auto; gap: 12px; align-items: center;
+    padding: 13px 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .comp-row.owned { background: var(--green-dim); border-color: #166534; }
+
+  .check-btn {
+    width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--dim);
+    background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: #fff; transition: all 0.2s; flex-shrink: 0;
+  }
+  .check-btn.checked { background: var(--green); border-color: var(--green); }
+
+  .comp-icon { font-size: 18px; line-height: 1; }
+
+  .comp-info { min-width: 0; }
+  .comp-cat { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .comp-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+  .comp-row.owned .comp-name { color: #86efac; }
+  .comp-note { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .comp-link { font-size: 10px; color: var(--blue); text-decoration: none; display: inline-block; margin-top: 2px; }
+  .comp-link:hover { text-decoration: underline; }
+
+  .comp-price-block { text-align: right; flex-shrink: 0; }
+  .comp-price { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; }
+  .comp-row.owned .comp-price { color: #6ee7b7; cursor: default; }
+  .comp-saving { font-family: var(--mono); font-size: 10px; color: var(--green); }
+  .comp-owned-label { font-size: 10px; font-weight: 700; color: var(--green); }
+  .price-input {
+    width: 84px; font-family: var(--mono); font-size: 14px; font-weight: 700;
+    background: var(--surface2); border: 1px solid var(--blue); border-radius: 6px;
+    color: var(--text); padding: 2px 8px; text-align: right;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+  .card-title { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+
+  .budget-rows { display: flex; flex-direction: column; gap: 9px; }
+  .brow { display: flex; justify-content: space-between; align-items: center; }
+  .brow-label { font-size: 11px; color: var(--muted); }
+  .brow-val { font-family: var(--mono); font-size: 13px; font-weight: 700; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+  .ready-row { margin-top: 4px; }
+  .ready-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .ready-date { font-family: var(--mono); font-size: 14px; font-weight: 700; }
+
+  /* ── Timeline ── */
+  .timeline-rows { display: flex; flex-direction: column; gap: 7px; }
+  .trow { display: flex; align-items: center; gap: 8px; }
+  .trow-label { width: 48px; font-family: var(--mono); font-size: 10px; flex-shrink: 0; }
+  .trow-track { flex: 1; background: var(--surface2); border-radius: 99px; height: 5px; overflow: hidden; }
+  .trow-fill { height: 100%; border-radius: 99px; }
+  .trow-amount { width: 62px; text-align: right; font-family: var(--mono); font-size: 10px; font-weight: 600; flex-shrink: 0; }
+  .trow-marker { font-size: 9px; flex-shrink: 0; width: 16px; text-align: center; }
+
+  .legend { display: flex; gap: 12px; margin-top: 10px; }
+  .legend span { font-size: 10px; }
+
+  /* ── BF rates ── */
+  .bf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .bf-row { display: flex; justify-content: space-between; font-size: 11px; }
+  .bf-row span:first-child { color: var(--muted); }
+  .bf-row span:last-child { font-family: var(--mono); font-weight: 700; color: var(--green); }
+
+  /* ── Footer ── */
+  .footer-note {
+    margin-top: 24px; padding: 14px 18px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    font-size: 11px; color: var(--dim); line-height: 1.6;
+  }
+  .footer-note strong { color: var(--muted); }
+
+  /* ── Responsive ── */
+  @media (max-width: 720px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .gpu-grid { grid-template-columns: 1fr; }
+    .title { font-size: 24px; }
+    .comp-row { grid-template-columns: 22px 24px 1fr auto; gap: 8px; padding: 11px 12px; }
+  }
+  @media (max-width: 480px) {
+    .comp-note, .comp-link { display: none; }
+  }
+</style>
 </head>
-<body class="p-3 md:p-8 min-h-screen">
+<body>
+<div class="shell">
 
-    <div class="max-w-6xl mx-auto space-y-6">
-        <!-- Header -->
-        <header class="border-b border-slate-800 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-microchip text-blue-400"></i> ZA Custom PC Matrix
-                </h1>
-                <p class="text-xs text-slate-400">Interactive Multi-Option & Black Friday Planner</p>
-            </div>
-            <!-- Android & Storage Sync Indicator -->
-            <div class="flex items-center gap-2 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg w-fit">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-slate-300 font-semibold">Local Storage Sync Active</span>
-            </div>
-        </header>
+<!-- ════════════════════════════════════════════════
+     ✏️  EDIT YOUR BUILD DATA HERE
+     ════════════════════════════════════════════════
 
-        <!-- Main Workspace -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            <!-- Left Column: Component Slots -->
-            <div class="lg:col-span-8 space-y-5" id="component-container">
-                <!-- Javascript will inject categories and options dynamically here -->
-            </div>
+  COMPONENTS — each item has:
+    id          unique key (no spaces)
+    category    display label
+    icon        emoji icon
+    name        full component name
+    retailZAR   current retail price in Rand
+    bfDiscount  Black Friday discount as decimal (0.10 = 10%)
+    obtained    true = already bought, false = still needed
+    note        short note shown under the name
+    link        product URL (leave "" if none)
 
-            <!-- Right Column: Financial Dashboard -->
-            <div class="lg:col-span-4 space-y-6">
-                
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 h-fit space-y-4 shadow-xl">
-                    <h2 class="text-lg font-bold text-white border-b border-slate-800 pb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-coins text-emerald-400"></i> Financial Engine
-                    </h2>
-                    
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center bg-slate-950 p-3.5 rounded-xl border border-slate-800/40">
-                            <span class="text-xs text-slate-400">Normal Active Cost:</span>
-                            <span class="font-extrabold text-lg text-emerald-400" id="total-normal">R0</span>
-                        </div>
+  GPU_OPTIONS — same format, but these are mutually exclusive choices.
+    Only one GPU is counted in totals at a time (toggled in the UI).
 
-                        <div class="flex justify-between items-center bg-slate-950 p-3.5 rounded-xl border border-slate-800/40">
-                            <span class="text-xs text-slate-400">Predicted Black Friday:</span>
-                            <span class="font-extrabold text-lg text-amber-400" id="total-bf">R0</span>
-                        </div>
+  FINANCIAL — your savings plan:
+    startPool       initial funds available
+    monthlyContrib  how much you save each month
+    startMonth/Year when monthly saving begins (1=Jan)
+    lumpSumAmount   one-off extra payment
+    lumpSumMonth/Year when lump sum arrives
+    bfMonth/Year    Black Friday window target
+═══════════════════════════════════════════════════ -->
+<script id="build-data" type="application/json">
+{
+  "meta": {
+    "projectName": "Project AM5",
+    "codename": "Compact Powerhouse",
+    "subtitle": "Micro-ATX · AM5 · 4K Living Room Rig · Lian Li A3-mATX"
+  },
+  "financial": {
+    "startPool": 8000,
+    "monthlyContrib": 5000,
+    "startMonth": 6,
+    "startYear": 2026,
+    "lumpSumAmount": 17451.27,
+    "lumpSumMonth": 1,
+    "lumpSumYear": 2027,
+    "bfMonth": 11,
+    "bfYear": 2026
+  },
+  "components": [
+    {
+      "id": "mobo",
+      "category": "Motherboard",
+      "icon": "⬛",
+      "name": "Sapphire NITRO+ B850M Wi-Fi",
+      "retailZAR": 3199,
+      "bfDiscount": 0.07,
+      "obtained": true,
+      "note": "mATX, AM5, B850 chipset",
+      "link": "https://www.wootware.co.za/sapphire-52123-01-40g-nitro-b850m-wifi-amd-b850-ryzen-socket-am5-micro-atx-desktop-motherboard.html"
+    },
+    {
+      "id": "cooler",
+      "category": "CPU Cooler",
+      "icon": "❄️",
+      "name": "ID-Cooling FROZN A620 Black",
+      "retailZAR": 799,
+      "bfDiscount": 0.15,
+      "obtained": true,
+      "note": "154mm dual-tower, already in hand",
+      "link": "https://www.wootware.co.za/id-cooling-frozn-a620-black-120mm-dual-tower-black-pwm-cpu-cooler.html"
+    },
+    {
+      "id": "fans",
+      "category": "Case Fans",
+      "icon": "🌀",
+      "name": "ID-Cooling TF-12025 ARGB ×3",
+      "retailZAR": 699,
+      "bfDiscount": 0.15,
+      "obtained": true,
+      "note": "Two-tier down-lighting setup",
+      "link": ""
+    },
+    {
+      "id": "cpu",
+      "category": "Processor",
+      "icon": "⚡",
+      "name": "AMD Ryzen 5 9600X",
+      "retailZAR": 4199,
+      "bfDiscount": 0.08,
+      "obtained": false,
+      "note": "Zen 5, AM5, 6C/12T",
+      "link": "https://www.evetech.co.za/amd-ryzen-5-9600x-processor/best-deal/20993"
+    },
+    {
+      "id": "ram",
+      "category": "Memory",
+      "icon": "💾",
+      "name": "XPG Lancer Blade RGB 32GB DDR5-6000 CL30",
+      "retailZAR": 8899,
+      "bfDiscount": 0.18,
+      "obtained": false,
+      "note": "Golden Grail — 1:1 FCLK ratio for 9600X",
+      "link": "https://www.wootware.co.za/recertified-xpg-ax5u6000c3016g-dtlabrbk-lancer-blade-rgb-32gb-2x16gb-ddr5-6000mhz-cl30-1-35v-black-desktop-memory.html"
+    },
+    {
+      "id": "ssd",
+      "category": "Storage",
+      "icon": "💿",
+      "name": "Kioxia Exceria Plus G4 1TB NVMe",
+      "retailZAR": 3299,
+      "bfDiscount": 0.20,
+      "obtained": false,
+      "note": "PCIe Gen4, primary OS + games drive",
+      "link": "https://www.wootware.co.za/kioxia-lsf10z001tg8-exceria-basic-g4-1tb-m-2-2280-pcie-4-0-x4-nvme-solid-state-drive.html"
+    },
+    {
+      "id": "psu",
+      "category": "Power Supply",
+      "icon": "🔌",
+      "name": "Super Flower Leadex III GE 850W ATX 3.1",
+      "retailZAR": 2199,
+      "bfDiscount": 0.12,
+      "obtained": false,
+      "note": "80+ Gold, native PCIe 5.1 cable",
+      "link": "https://www.wootware.co.za/super-flower-sf-850f14ge-leadex-iii-ge-850w-80-plus-gold-atx-3-1-fully-modular-black-desktop-power-supply.html"
+    },
+    {
+      "id": "case",
+      "category": "Chassis",
+      "icon": "📦",
+      "name": "Lian Li A3-mATX Tempered Glass Black",
+      "retailZAR": 1599,
+      "bfDiscount": 0.15,
+      "obtained": false,
+      "note": "Vertical chimney airflow, wood accent",
+      "link": "https://www.wootware.co.za/lian-li-g99-a3x-wdg-00-a3-matx-tempered-glass-black-steel-micro-atx-mini-tower-desktop-chassis.html"
+    }
+  ],
+  "gpuOptions": [
+    {
+      "id": "gpu-rx",
+      "name": "XFX Speedster MERC 310 RX 9070 XT 16GB",
+      "retailZAR": 14999,
+      "bfDiscount": 0.10,
+      "note": "AMD RDNA 4 · 16GB VRAM · 256-bit bus",
+      "links": [
+        { "label": "Evetech", "url": "https://www.evetech.co.za/xfx-quicksilver-radeon-rx-9070-xt-16gb-graphics-card/best-deal/22433" },
+        { "label": "Wootware", "url": "https://www.wootware.co.za/amd-radeon-rx-9070-xt.html" }
+      ]
+    },
+    {
+      "id": "gpu-rtx",
+      "name": "Palit RTX 5070 Ti GamingPro S 16GB GDDR7",
+      "retailZAR": 17999,
+      "bfDiscount": 0.10,
+      "note": "NVIDIA Blackwell · 16GB GDDR7 · 256-bit bus",
+      "links": [
+        { "label": "Evetech", "url": "https://www.evetech.co.za/palit-geforce-rtx-5070-ti-gamingpro-s-16gb-gddr7/best-deal/24135" },
+        { "label": "Wootware", "url": "https://www.wootware.co.za/nvidia-geforce-rtx-5070-ti.html" }
+      ]
+    }
+  ],
+  "activeGpuId": "gpu-rtx"
+}
+</script>
 
-                        <div class="flex justify-between items-center bg-slate-950 p-3.5 rounded-xl border border-slate-800/40">
-                            <span class="text-xs text-slate-400">Already Spent (Obtained):</span>
-                            <span class="font-extrabold text-lg text-blue-400" id="total-spent">R0</span>
-                        </div>
-                        
-                        <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
-                            <div>
-                                <span class="text-[10px] font-bold text-slate-400 block uppercase">Remaining to Save</span>
-                                <span class="text-[11px] text-slate-500">(Active Normal - Spent)</span>
-                            </div>
-                            <span class="text-xl font-black text-blue-500" id="net-remaining">R0</span>
-                        </div>
-                    </div>
+<!-- ══════════════════════════════
+     UI — rendered by JS below
+══════════════════════════════════ -->
 
-                    <!-- RECALCULATE DYNAMIC DISCOUNTS -->
-                    <button onclick="recalculateAllDiscounts()" class="w-full bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500 text-blue-300 text-xs py-2.5 rounded-xl transition font-semibold">
-                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Recalculate All Auto-Discounts
-                    </button>
+<header class="header">
+  <div class="header-top">
+    <div>
+      <div class="eyebrow" id="hdr-eyebrow">PROJECT AM5 · SA LIVING ROOM RIG</div>
+      <h1 class="title" id="hdr-title">Compact Powerhouse</h1>
+      <div class="subtitle" id="hdr-subtitle">Micro-ATX · AM5 · 4K Target · Lian Li A3-mATX</div>
+    </div>
+    <div class="header-stat">
+      <div class="stat-big" id="stat-parts">0<span>/0</span></div>
+      <div class="stat-label">parts secured</div>
+    </div>
+  </div>
+  <div class="runway">
+    <div class="runway-labels">
+      <span>Savings runway to full retail build</span>
+      <span><b id="runway-current">R0</b> / <b id="runway-need">R0</b></span>
+    </div>
+    <div class="bar-track"><div class="bar-fill" id="runway-bar" style="width:0%"></div></div>
+  </div>
+</header>
 
-                    <button id="reset-btn" class="w-full bg-rose-950/20 hover:bg-rose-900/40 border border-rose-800/50 text-rose-300 text-xs py-2 rounded-xl transition font-semibold">
-                        Clear Cache & Reset Build
-                    </button>
-                </div>
+<div class="section-label">Target GPU — select one</div>
+<div class="gpu-grid" id="gpu-grid"></div>
 
-                <!-- Historical Discount Rates Guide -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-xs space-y-3 shadow-lg">
-                    <h3 class="font-bold text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-tags text-amber-400"></i> Historical SA Markdowns
-                    </h3>
-                    <p class="text-[11px] leading-relaxed text-slate-400">
-                        The app estimates Black Friday targets using real historical averages from local South African importers:
-                    </p>
-                    <div class="grid grid-cols-2 gap-2 text-[10px] bg-slate-950 p-2.5 rounded-xl border border-slate-800/60">
-                        <div class="flex justify-between"><span class="text-slate-400">CPUs:</span><span class="text-emerald-400 font-bold">-8%</span></div>
-                        <div class="flex justify-between"><span class="text-slate-400">GPUs:</span><span class="text-emerald-400 font-bold">-10%</span></div>
-                        <div class="flex justify-between"><span class="text-slate-400">RAM:</span><span class="text-emerald-400 font-bold">-18%</span></div>
-                        <div class="flex justify-between"><span class="text-slate-400">SSDs:</span><span class="text-emerald-400 font-bold">-20%</span></div>
-                        <div class="flex justify-between"><span class="text-slate-400">Coolers:</span><span class="text-emerald-400 font-bold">-15%</span></div>
-                        <div class="flex justify-between"><span class="text-slate-400">PSUs:</span><span class="text-emerald-400 font-bold">-12%</span></div>
-                    </div>
-                </div>
-
-                <!-- Android Integration Notice -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-xs space-y-2 text-slate-400">
-                    <h3 class="font-bold text-white flex items-center gap-1.5">
-                        <i class="fa-brands fa-android text-emerald-400"></i> Running on Android
-                    </h3>
-                    <p class="leading-relaxed">
-                        This interface is fully optimized for touch, fluid layout scaling, and persistent caching. If you add this page to your Home Screen, your notes and checkmarks will stay perfectly saved locally inside your browser sandbox.
-                    </p>
-                </div>
-
-            </div>
-
+<div class="main-grid">
+  <div>
+    <div class="list-header">
+      <div class="section-label" style="margin-bottom:0">Components</div>
+      <button class="bf-toggle" id="bf-toggle" onclick="toggleBF()">Show BF Prices</button>
+    </div>
+    <div class="comp-list" id="comp-list"></div>
+  </div>
+  <div class="sidebar">
+    <div class="card">
+      <div class="card-title">Budget Engine</div>
+      <div class="budget-rows">
+        <div class="brow"><span class="brow-label">Already spent</span><span class="brow-val" id="b-spent" style="color:#60a5fa">R0</span></div>
+        <div class="brow"><span class="brow-label">Remaining (retail)</span><span class="brow-val" id="b-remain" style="color:#f8fafc">R0</span></div>
+        <div class="brow"><span class="brow-label">Remaining (BF est.)</span><span class="brow-val" id="b-bf" style="color:#f59e0b">R0</span></div>
+        <hr class="divider">
+        <div class="brow"><span class="brow-label">Current savings pool</span><span class="brow-val" id="b-pool" style="color:#34d399">R0</span></div>
+        <div class="brow"><span class="brow-label">BF pool (Nov 2026)</span><span class="brow-val" id="b-bfpool">R0</span></div>
+        <hr class="divider">
+        <div class="ready-row">
+          <div class="ready-label">Full retail — can buy</div>
+          <div class="ready-date" id="b-retail-date" style="color:#60a5fa">—</div>
         </div>
-
-        <!-- AI Handover Brief & Core Project Background (Visually Elegant Bottom Panel) -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
-            <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-circle-info text-blue-400"></i> Core Project Blueprint & AI Handover Brief
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300 leading-relaxed">
-                <div class="space-y-2">
-                    <h4 class="font-bold text-white uppercase text-[11px] tracking-wider text-blue-400">Project Strategy</h4>
-                    <p>
-                        This matrix tracks a customized South African high-end desktop assembly profile engineered to act as a "PS6-Killer". It targets advanced 1440p and entry 4K asset streaming with 16GB of dedicated VRAM on a 256-bit bus structure.
-                    </p>
-                    <p>
-                        <strong>Hardware Base:</strong> AMD Ryzen 5 9600X, Sapphire NITRO+ B850M, XPG Lancer Neon 32GB DDR5-6000, ID-Cooling dual-tower air cooler, Kioxia Exceria Plus 1TB Gen4 SSD, and Super Flower Leadex III 850W ATX 3.1 PSU inside a Lian Li A3-mATX mini-chassis.
-                    </p>
-                </div>
-                <div class="space-y-2">
-                    <h4 class="font-bold text-white uppercase text-[11px] tracking-wider text-emerald-400">Capital Plan</h4>
-                    <p>
-                        <strong>Starter Allocation:</strong> R8,000 starting cash actively deployed to capture initial skeleton parts.
-                    </p>
-                    <p>
-                        <strong>Monthly Savings Stream:</strong> R5,000 per month starting June 2026, supplemented by a final planned injection of R17,451.27 in January 2027 to finalize GPU acquisition and secondary drives.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Instant Copy-Paste Box for new chats -->
-            <div class="mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                        <i class="fa-solid fa-copy text-blue-400"></i> Handover String (Click inside to highlight)
-                    </span>
-                    <span class="text-[9px] text-slate-500 font-mono">UTF-8 Schema</span>
-                </div>
-                <textarea readonly onclick="this.select()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-[10px] text-slate-400 font-mono focus:ring-0 focus:outline-none resize-none h-24">I am building a South African "PS6-Killer" desktop. Specification blueprint: Ryzen 5 9600X, Sapphire NITRO+ B850M Wi-Fi, 32GB XPG Lancer Neon DDR5-6000 memory, ID-Cooling FROZN A620 SE cooler, Kioxia G4 1TB SSD, Super Flower Leadex III 850W ATX 3.1 PSU, Lian Li A3-mATX Case. Core GPUs monitored are the RX 9070 XT or RTX 5070 Ti. Capital: R8,000 starting May 2026, + R5,000/month savings starting June 2026, + a final lump sum of R17,451.27 in January 2027. We built a local storage-synchronized price matrix with category-specific South African Black Friday auto-discount estimation variables inside this index.html. Please preserve the dynamic JS object layout and state models on future edits.</textarea>
-            </div>
+        <div class="ready-row" style="margin-top:10px">
+          <div class="ready-label">BF pricing — can buy</div>
+          <div class="ready-date" id="b-bf-date" style="color:#f59e0b">—</div>
         </div>
+      </div>
+    </div>
 
-    </div><!-- end of max-w-6xl -->
+    <div class="card">
+      <div class="card-title">Savings Timeline</div>
+      <div class="timeline-rows" id="timeline"></div>
+      <div class="legend">
+        <span style="color:#3b82f6">▬ saving</span>
+        <span style="color:#f59e0b">▬ BF ready</span>
+        <span style="color:#10b981">▬ retail ready</span>
+      </div>
+    </div>
 
-    <script>
-        // --- 1. Historical South African Black Friday Markdown Matrix ---
-        const categoryDiscountRates = {
-            'CPU': 0.08,          // -8% off CPUs
-            'GPU': 0.10,          // -10% off GPUs
-            'Motherboard': 0.07,  // -7% off Motherboards
-            'RAM': 0.18,          // -18% off RAM (High volatility)
-            'Cooler': 0.15,       // -15% off Coolers
-            'Power Supply': 0.12, // -12% off PSUs
-            'Storage': 0.20,      // -20% off SSDs (highly competitive)
-            'Chassis': 0.15       // -15% off Cases
-        };
+    <div class="card">
+      <div class="card-title">SA BF Historical Discounts</div>
+      <div class="bf-grid">
+        <div class="bf-row"><span>CPUs</span><span>−8%</span></div>
+        <div class="bf-row"><span>GPUs</span><span>−10%</span></div>
+        <div class="bf-row"><span>RAM</span><span>−18%</span></div>
+        <div class="bf-row"><span>SSDs</span><span>−20%</span></div>
+        <div class="bf-row"><span>Coolers</span><span>−15%</span></div>
+        <div class="bf-row"><span>PSUs</span><span>−12%</span></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        // --- 2. Centralized Core Blueprint State ---
-        const defaultBlueprint = [
-            {
-                category: 'CPU',
-                title: 'Processor (CPU)',
-                icon: 'fa-microchip',
-                options: [
-                    { id: 'cpu-1', active: true, name: 'Ryzen 5 9600X', price: 4499, bfPrice: 4139, autoBF: true, obtained: false, note: 'Targeting Zen 5 flagship budget performance' },
-                    { id: 'cpu-2', active: false, name: 'Ryzen 5 7600', price: 4200, bfPrice: 3864, autoBF: true, obtained: false, note: 'Alternative fallback choice' }
-                ]
-            },
-            {
-                category: 'GPU',
-                title: 'Graphics Card (GPU)',
-                icon: 'fa-images',
-                options: [
-                    { id: 'gpu-1', active: true, name: 'Radeon RX 9070 XT 16GB', price: 14999, bfPrice: 13499, autoBF: true, obtained: false, note: 'Wootware listing - 16GB VRAM on a 256-bit bus width' },
-                    { id: 'gpu-2', active: false, name: 'RTX 5070 Ti 16GB GDDR7', price: 18799, bfPrice: 16919, autoBF: true, obtained: false, note: 'Palit alternative model' }
-                ]
-            },
-            {
-                category: 'Motherboard',
-                title: 'Motherboard',
-                icon: 'fa-server',
-                options: [
-                    { id: 'mobo-1', active: true, name: 'Sapphire NITRO+ B850M Wi-Fi', price: 3199, bfPrice: 2975, autoBF: true, obtained: false, note: 'Excellent power delivery phase and styling matching mATX setup' }
-                ]
-            },
-            {
-                category: 'RAM',
-                title: 'RAM (Memory)',
-                icon: 'fa-memory',
-                options: [
-                    { id: 'ram-1', active: true, name: 'XPG Lancer Neon RGB 32GB (2x16) 6000', price: 8699, bfPrice: 7133, autoBF: true, obtained: false, note: 'Dual Channel EXPO speed sweet spot' }
-                ]
-            },
-            {
-                category: 'Cooler',
-                title: 'CPU Cooler',
-                icon: 'fa-snowflake',
-                options: [
-                    { id: 'cooler-1', active: true, name: 'ID-Cooling FROZN A620 PRO SE', price: 849, bfPrice: 722, autoBF: true, obtained: false, note: '154mm height clears the chassis panel limits comfortably' }
-                ]
-            },
-            {
-                category: 'Power Supply',
-                title: 'Power Supply (PSU)',
-                icon: 'fa-plug',
-                options: [
-                    { id: 'psu-1', active: true, name: 'Super Flower Leadex III GE 850W ATX 3.1', price: 2199, bfPrice: 1935, autoBF: true, obtained: false, note: 'ATX 3.1 / PCI-E 5.1 native power lines to prevent GPU trips' }
-                ]
-            },
-            {
-                category: 'Storage',
-                title: 'Storage (SSD)',
-                icon: 'fa-database',
-                options: [
-                    { id: 'ssd-1', active: true, name: 'Kioxia Exceria Plus G4 1TB Gen4', price: 2300, bfPrice: 1840, autoBF: true, obtained: false, note: 'Ultra fast read and write data pipeline' }
-                ]
-            },
-            {
-                category: 'Chassis',
-                title: 'Chassis (Case)',
-                icon: 'fa-box',
-                options: [
-                    { id: 'case-1', active: true, name: 'Lian Li A3-mATX Black', price: 1599, bfPrice: 1359, autoBF: true, obtained: false, note: 'Compact layout compatible with standard ATX power units' }
-                ]
-            }
-        ];
+<div class="footer-note">
+  <strong>Handover context: </strong>
+  Project AM5 SA rig · R8k start May 2026 · R5k/month from Jun 2026 · R17,451.27 lump sum Jan 2027 ·
+  Obtained: Sapphire NITRO+ B850M, ID-Cooling FROZN A620 Black, ID-Cooling TF-12025 ARGB ×3 fans ·
+  GPU targets: RTX 5070 Ti (primary) / RX 9070 XT (alternative) · Target assembly: Dec 2026 ·
+  Design: minimalist two-tier ARGB lighting, Playnite console-style frontend.
+</div>
 
-        let state = [];
+</div><!-- /shell -->
 
-        // --- 3. Dynamic View Rendering Engine ---
-        function renderApp() {
-            const container = document.getElementById('component-container');
-            container.innerHTML = '';
+<script>
+// ═══════════════════════════════════════════
+//  State
+// ═══════════════════════════════════════════
+const RAW = JSON.parse(document.getElementById('build-data').textContent);
+let state = {
+  components:  RAW.components.map(c => ({...c})),
+  gpuOptions:  RAW.gpuOptions.map(g => ({...g})),
+  activeGpuId: RAW.activeGpuId,
+  financial:   RAW.financial,
+  showBF:      false,
+  editingId:   null
+};
 
-            state.forEach((cat, catIdx) => {
-                const slot = document.createElement('div');
-                slot.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-5 shadow-lg space-y-4";
-                
-                // Header of Component Card
-                slot.innerHTML = `
-                    <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3">
-                        <div class="p-2 bg-slate-950 text-blue-400 rounded-xl">
-                            <i class="fa-solid ${cat.icon || 'fa-folder'} text-sm"></i>
-                        </div>
-                        <h3 class="font-extrabold text-base text-blue-400">${cat.title}</h3>
-                    </div>
-                    <div class="options-list space-y-4"></div>
-                    <div class="flex justify-end pt-1">
-                        <button onclick="addOption(${catIdx})" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3.5 py-1.5 rounded-lg border border-slate-700 transition">
-                            <i class="fa-solid fa-plus-circle mr-1"></i> Add Alternative Option
-                        </button>
-                    </div>
-                `;
+const MONTHS = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const NOW_M = 6, NOW_Y = 2026;
 
-                const optionsList = slot.querySelector('.options-list');
+// ═══════════════════════════════════════════
+//  Finance helpers
+// ═══════════════════════════════════════════
+function monthsBetween(fm, fy, tm, ty) { return (ty - fy) * 12 + (tm - fm); }
 
-                cat.options.forEach((opt, optIdx) => {
-                    const row = document.createElement('div');
-                    row.className = `p-3.5 rounded-xl border transition flex flex-col gap-3 ${opt.active ? 'border-blue-500/50 bg-blue-950/10' : 'border-slate-800/80 bg-slate-950/40'}`;
-                    
-                    // Dynamic calculation of current markdown percentage for display
-                    const markdownPercent = opt.price > 0 ? Math.round(((opt.price - opt.bfPrice) / opt.price) * 100) : 0;
-                    const discountLabel = opt.autoBF ? `${markdownPercent}% Est.` : `${markdownPercent}% Custom`;
+function savingsAt(m, y) {
+  const F = state.financial;
+  const n = monthsBetween(F.startMonth, F.startYear, m, y);
+  if (n < 0) return F.startPool; // before savings started
+  let total = F.startPool + n * F.monthlyContrib;
+  const lumpN = monthsBetween(F.startMonth, F.startYear, F.lumpSumMonth, F.lumpSumYear);
+  if (n >= lumpN) total += F.lumpSumAmount;
+  return total;
+}
 
-                    row.innerHTML = `
-                        <!-- Core Settings Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                            <!-- Toggle Selection Controls -->
-                            <div class="md:col-span-3 flex items-center gap-4">
-                                <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
-                                    <input type="radio" name="active_${cat.category}" ${opt.active ? 'checked' : ''} 
-                                        onchange="setActiveOption(${catIdx}, ${optIdx})"
-                                        class="text-blue-500 h-4 w-4 bg-slate-900 border-slate-700">
-                                    <span class="${opt.active ? 'text-blue-400 font-bold' : ''}">Active</span>
-                                </label>
-                                <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
-                                    <input type="checkbox" ${opt.obtained ? 'checked' : ''} 
-                                        onchange="toggleObtained(${catIdx}, ${optIdx})"
-                                        class="rounded text-emerald-500 h-4 w-4 bg-slate-900 border-slate-700 focus:ring-0">
-                                    <span class="${opt.obtained ? 'text-emerald-400 font-bold' : ''}">Obtained</span>
-                                </label>
-                            </div>
+function affordableMonth(need) {
+  for (let y = 2026; y <= 2028; y++)
+    for (let m = 1; m <= 12; m++) {
+      if (y === 2026 && m < state.financial.startMonth) continue;
+      if (savingsAt(m, y) >= need) return {m, y};
+    }
+  return null;
+}
 
-                            <!-- Hardware Name Field -->
-                            <div class="md:col-span-4">
-                                <input type="text" value="${opt.name}" 
-                                    oninput="updateOptionField(${catIdx}, ${optIdx}, 'name', this.value)"
-                                    class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-medium w-full focus:border-blue-500 focus:outline-none">
-                            </div>
+function fmtZAR(n) { return 'R' + Math.round(n).toLocaleString('en-ZA'); }
 
-                            <!-- Retail Price Box -->
-                            <div class="md:col-span-2 flex items-center gap-1.5">
-                                <span class="text-[10px] text-slate-500 uppercase font-bold block shrink-0">Retail R</span>
-                                <input type="number" value="${opt.price}" 
-                                    oninput="updateOptionField(${catIdx}, ${optIdx}, 'price', this.value)"
-                                    class="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1.5 text-xs font-bold text-emerald-400 w-full text-right focus:border-blue-500 focus:outline-none">
-                            </div>
+// ═══════════════════════════════════════════
+//  Derived totals
+// ═══════════════════════════════════════════
+function getGPU()       { return state.gpuOptions.find(g => g.id === state.activeGpuId); }
+function allActive()    { return [...state.components, getGPU()].filter(Boolean); }
+function obtained()     { return allActive().filter(c => c.obtained); }
+function remaining()    { return allActive().filter(c => !c.obtained); }
+function totalSpent()   { return obtained().reduce((s,c) => s + c.retailZAR, 0); }
+function totalRetail()  { return allActive().reduce((s,c) => s + c.retailZAR, 0); }
+function remainRetail() { return remaining().reduce((s,c) => s + c.retailZAR, 0); }
+function remainBF()     { return remaining().reduce((s,c) => s + Math.round(c.retailZAR*(1-c.bfDiscount)), 0); }
 
-                            <!-- Black Friday Predicted Box & Smart Lock (Direct Binding ID Added) -->
-                            <div class="md:col-span-2 flex items-center gap-1">
-                                <span class="text-[10px] text-slate-500 uppercase font-bold block shrink-0">BF R</span>
-                                <div class="relative w-full flex items-center">
-                                    <input type="number" id="bf-input-${opt.id}" value="${opt.bfPrice}" 
-                                        oninput="updateOptionFieldManual(${catIdx}, ${optIdx}, this.value)"
-                                        class="bg-slate-900 border border-slate-800 rounded-lg pl-1.5 pr-7 py-1.5 text-xs font-bold text-amber-400 w-full text-right focus:border-blue-500 focus:outline-none">
-                                    <!-- Toggle Auto Engine Lock Icon -->
-                                    <button onclick="toggleAutoBF(${catIdx}, ${optIdx})" 
-                                            class="absolute right-1 text-[10px] p-1 ${opt.autoBF ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-500 hover:text-slate-400'}" 
-                                            title="${opt.autoBF ? 'Smart Auto-BF active (Estimating). Click to manual lock.' : 'Manual lock active. Click to estimate automatically.'}">
-                                        <i class="fa-solid ${opt.autoBF ? 'fa-lock-open' : 'fa-lock'}"></i>
-                                    </button>
-                                </div>
-                            </div>
+// ═══════════════════════════════════════════
+//  GPU cards
+// ═══════════════════════════════════════════
+function renderGPUs() {
+  const el = document.getElementById('gpu-grid');
+  el.innerHTML = state.gpuOptions.map(gpu => {
+    const active = gpu.id === state.activeGpuId;
+    const bf = Math.round(gpu.retailZAR * (1 - gpu.bfDiscount));
+    const linksHtml = (gpu.links || []).map(l =>
+      `<a class="gpu-link" href="${l.url}" target="_blank" rel="noopener">↗ ${l.label}</a>`
+    ).join(' ');
+    return `
+    <button class="gpu-card ${active ? 'active' : ''}" onclick="selectGPU('${gpu.id}')">
+      <div class="gpu-card-top">
+        <div>
+          <div class="gpu-badge ${active ? 'active' : 'inactive'}">${active ? '✓ SELECTED' : 'ALTERNATIVE'}</div>
+          <div class="gpu-name">${gpu.name}</div>
+          <div class="gpu-note">${gpu.note}</div>
+          <div style="margin-top:6px">${linksHtml}</div>
+        </div>
+        <div class="gpu-prices">
+          <div class="price-retail">${fmtZAR(gpu.retailZAR)}</div>
+          <div class="price-bf">BF: ${fmtZAR(bf)}</div>
+        </div>
+      </div>
+    </button>`;
+  }).join('');
+}
 
-                            <!-- Delete Option Control -->
-                            <div class="md:col-span-1 text-center">
-                                <button onclick="deleteOption(${catIdx}, ${optIdx})" class="text-slate-600 hover:text-rose-500 p-1.5 transition">
-                                    <i class="fa-solid fa-circle-minus"></i>
-                                </button>
-                            </div>
-                        </div>
+// ═══════════════════════════════════════════
+//  Component rows
+// ═══════════════════════════════════════════
+function renderComponents() {
+  const el = document.getElementById('comp-list');
+  el.innerHTML = state.components.map(c => {
+    const bf = Math.round(c.retailZAR * (1 - c.bfDiscount));
+    const saving = c.retailZAR - bf;
+    const price = state.showBF ? bf : c.retailZAR;
+    const isEditing = state.editingId === c.id;
+    const linkHtml = c.link
+      ? `<a class="comp-link" href="${c.link}" target="_blank" rel="noopener">↗ View product</a>`
+      : '';
+    const priceHtml = isEditing
+      ? `<input class="price-input" id="edit-${c.id}" type="number" value="${c.retailZAR}"
+           onblur="commitEdit('${c.id}')" onkeydown="if(event.key==='Enter')commitEdit('${c.id}')">`
+      : `<div class="comp-price" onclick="${c.obtained ? '' : `startEdit('${c.id}')`}"
+              title="${c.obtained ? '' : 'Click to update price'}">${fmtZAR(price)}</div>`;
+    const savingHtml = state.showBF && !c.obtained
+      ? `<div class="comp-saving">−${fmtZAR(saving)}</div>` : '';
+    const ownedHtml = c.obtained
+      ? `<div class="comp-owned-label">OWNED</div>` : '';
+    return `
+    <div class="comp-row ${c.obtained ? 'owned' : ''}">
+      <button class="check-btn ${c.obtained ? 'checked' : ''}" onclick="toggleOwned('${c.id}')">${c.obtained ? '✓' : ''}</button>
+      <div class="comp-icon">${c.icon}</div>
+      <div class="comp-info">
+        <div class="comp-cat">${c.category}</div>
+        <div class="comp-name">${c.name}</div>
+        <div class="comp-note">${c.note}</div>
+        ${linkHtml}
+      </div>
+      <div class="comp-price-block">
+        ${priceHtml}
+        ${savingHtml}
+        ${ownedHtml}
+      </div>
+    </div>`;
+  }).join('');
 
-                        <!-- Notes Area & Discount Indicator Badge -->
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950 p-2 rounded-lg border border-slate-900">
-                            <div class="flex items-center gap-2 w-full">
-                                <span class="text-[10px] text-blue-400 font-extrabold uppercase shrink-0">
-                                    <i class="fa-solid fa-pen-to-square"></i> Note:
-                                </span>
-                                <input type="text" placeholder="Add custom shopping links, alternative stores, or warranty info..." 
-                                    value="${opt.note || ''}"
-                                    oninput="updateOptionField(${catIdx}, ${optIdx}, 'note', this.value)"
-                                    class="bg-transparent border-none text-xs text-slate-300 placeholder-slate-700 w-full focus:outline-none p-0">
-                            </div>
-                            <!-- Dynamic Discount Badge -->
-                            <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full shrink-0 text-center ${opt.autoBF ? 'bg-emerald-950/80 border border-emerald-500/20 text-emerald-400' : 'bg-amber-950/80 border border-amber-500/20 text-amber-400'}" id="badge-${opt.id}">
-                                <i class="fa-solid ${opt.autoBF ? 'fa-wand-magic-sparkles' : 'fa-hand'} mr-1"></i>${discountLabel}
-                            </span>
-                        </div>
-                    `;
-                    optionsList.appendChild(row);
-                });
+  if (state.editingId) {
+    const inp = document.getElementById('edit-' + state.editingId);
+    if (inp) { inp.focus(); inp.select(); }
+  }
+}
 
-                container.appendChild(slot);
-            });
+// ═══════════════════════════════════════════
+//  Budget sidebar
+// ═══════════════════════════════════════════
+function renderBudget() {
+  const F = state.financial;
+  const pool = savingsAt(NOW_M, NOW_Y);
+  const bfPool = savingsAt(F.bfMonth, F.bfYear);
+  const rr = remainRetail();
+  const rb = remainBF();
+  const canBF = bfPool >= rb;
 
-            calculateTotals();
-        }
+  document.getElementById('b-spent').textContent   = fmtZAR(totalSpent());
+  document.getElementById('b-remain').textContent  = fmtZAR(rr);
+  document.getElementById('b-bf').textContent      = fmtZAR(rb);
+  document.getElementById('b-pool').textContent    = fmtZAR(pool);
+  document.getElementById('b-bfpool').textContent  = fmtZAR(bfPool);
+  document.getElementById('b-bfpool').style.color  = canBF ? '#10b981' : '#f59e0b';
 
-        // --- 4. Interactive State Handlers ---
-        function addOption(catIdx) {
-            // New option defaults to R0 but registers with dynamic autoBF true
-            state[catIdx].options.push({
-                id: 'opt-' + Date.now(),
-                active: false,
-                name: 'New Custom Variant',
-                price: 0,
-                bfPrice: 0,
-                autoBF: true,
-                obtained: false,
-                note: ''
-            });
-            saveToLocalStorage();
-            renderApp();
-        }
+  const retailAt = affordableMonth(rr);
+  const bfAt = affordableMonth(rb);
+  document.getElementById('b-retail-date').textContent = retailAt ? `${MONTHS[retailAt.m]} ${retailAt.y}` : 'After lump sum';
+  document.getElementById('b-bf-date').textContent     = bfAt ? `${MONTHS[bfAt.m]} ${bfAt.y}` : 'After lump sum';
 
-        function deleteOption(catIdx, optIdx) {
-            const wasActive = state[catIdx].options[optIdx].active;
-            state[catIdx].options.splice(optIdx, 1);
-            if (wasActive && state[catIdx].options.length > 0) {
-                state[catIdx].options[0].active = true;
-            }
-            saveToLocalStorage();
-            renderApp();
-        }
+  // header runway
+  const pct = Math.min(100, (pool / rr) * 100);
+  document.getElementById('runway-current').textContent = fmtZAR(pool);
+  document.getElementById('runway-need').textContent    = fmtZAR(rr);
+  const barEl = document.getElementById('runway-bar');
+  barEl.style.width = pct + '%';
+  barEl.style.background = pct >= 100
+    ? 'linear-gradient(90deg,#10b981,#34d399)'
+    : pct >= 60
+    ? 'linear-gradient(90deg,#f59e0b,#fbbf24)'
+    : 'linear-gradient(90deg,#3b82f6,#60a5fa)';
+}
 
-        function setActiveOption(catIdx, optIdx) {
-            state[catIdx].options.forEach((opt, idx) => {
-                opt.active = (idx === optIdx);
-            });
-            saveToLocalStorage();
-            renderApp();
-        }
+// ═══════════════════════════════════════════
+//  Header stats
+// ═══════════════════════════════════════════
+function renderHeader() {
+  const all = allActive();
+  const obt = obtained();
+  document.getElementById('stat-parts').innerHTML = `${obt.length}<span>/${all.length}</span>`;
+}
 
-        // Toggle obtained state (checkbox)
-        function toggleObtained(catIdx, optIdx) {
-            state[catIdx].options[optIdx].obtained = !state[catIdx].options[optIdx].obtained;
-            // Force option active if obtained
-            if (state[catIdx].options[optIdx].obtained) {
-                state[catIdx].options.forEach((opt, idx) => {
-                    opt.active = (idx === optIdx);
-                });
-            }
-            saveToLocalStorage();
-            renderApp();
-        }
+// ═══════════════════════════════════════════
+//  Timeline
+// ═══════════════════════════════════════════
+function renderTimeline() {
+  const F = state.financial;
+  const rr = remainRetail();
+  const rb = remainBF();
+  const months = [
+    [6,2026],[7,2026],[8,2026],[9,2026],[10,2026],
+    [11,2026],[12,2026],[1,2027]
+  ];
+  const el = document.getElementById('timeline');
+  el.innerHTML = months.map(([m, y]) => {
+    const s = savingsAt(m, y);
+    const pct = Math.min(100, (s / rr) * 100);
+    const canRetail = s >= rr;
+    const canBF = s >= rb;
+    const isBF = m === F.bfMonth && y === F.bfYear;
+    const isNow = m === NOW_M && y === NOW_Y;
+    const color = canRetail ? '#10b981' : canBF ? '#f59e0b' : '#3b82f6';
+    const labelColor = isNow ? '#60a5fa' : isBF ? '#f59e0b' : '#4a5568';
+    const marker = isBF ? '🔥' : isNow ? '▶' : '';
+    const label = `${MONTHS[m]}${y !== 2026 ? ' 27' : ''}`;
+    return `
+    <div class="trow">
+      <div class="trow-label" style="color:${labelColor};font-weight:${isNow||isBF?'700':'400'}">${label}</div>
+      <div class="trow-track"><div class="trow-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="trow-amount" style="color:${color}">${fmtZAR(s)}</div>
+      <div class="trow-marker">${marker}</div>
+    </div>`;
+  }).join('');
+}
 
-        // Toggles lock vs unlock (Auto vs Manual BF estimation)
-        function toggleAutoBF(catIdx, optIdx) {
-            const opt = state[catIdx].options[optIdx];
-            opt.autoBF = !opt.autoBF;
-            
-            if (opt.autoBF) {
-                // Instantly run estimation
-                const categoryKey = state[catIdx].category;
-                const rate = categoryDiscountRates[categoryKey] || 0.10;
-                opt.bfPrice = Math.round(opt.price * (1 - rate));
-            }
-            
-            saveToLocalStorage();
-            renderApp();
-        }
+// ═══════════════════════════════════════════
+//  Actions
+// ═══════════════════════════════════════════
+function selectGPU(id) {
+  state.activeGpuId = id;
+  render();
+}
 
-        // Standard updates (e.g. name, retail price)
-        function updateOptionField(catIdx, optIdx, field, val) {
-            const opt = state[catIdx].options[optIdx];
-            
-            if (field === 'price') {
-                opt.price = Math.max(0, parseFloat(val) || 0);
-                // If Auto Mode is active, dynamically update predicted BF
-                if (opt.autoBF) {
-                    const categoryKey = state[catIdx].category;
-                    const rate = categoryDiscountRates[categoryKey] || 0.10;
-                    opt.bfPrice = Math.round(opt.price * (1 - rate));
-                    
-                    // Directly write to the DOM element to keep dynamic updates smooth without losing focus
-                    const bfInput = document.getElementById(`bf-input-${opt.id}`);
-                    if (bfInput) {
-                        bfInput.value = opt.bfPrice;
-                    }
-                }
-            } else if (field === 'bfPrice') {
-                opt.bfPrice = Math.max(0, parseFloat(val) || 0);
-            } else {
-                opt[field] = val;
-            }
-            
-            saveToLocalStorage();
-            calculateTotalsSilent();
-            updateRowBadge(catIdx, optIdx);
-        }
+function toggleBF() {
+  state.showBF = !state.showBF;
+  const btn = document.getElementById('bf-toggle');
+  btn.textContent = state.showBF ? '🔥 BF Prices ON' : 'Show BF Prices';
+  btn.classList.toggle('on', state.showBF);
+  renderComponents();
+  renderBudget();
+}
 
-        // Updates BF field manually - breaks away from the Auto Estimator lock
-        function updateOptionFieldManual(catIdx, optIdx, val) {
-            const opt = state[catIdx].options[optIdx];
-            opt.bfPrice = Math.max(0, parseFloat(val) || 0);
-            opt.autoBF = false; // Disable auto-mode because user chose to override
-            
-            saveToLocalStorage();
-            calculateTotalsSilent();
-            updateRowBadge(catIdx, optIdx);
-        }
+function toggleOwned(id) {
+  const c = state.components.find(c => c.id === id);
+  if (c) c.obtained = !c.obtained;
+  render();
+}
 
-        // Redraws just the small badge to prevent layout reload focus loss
-        function updateRowBadge(catIdx, optIdx) {
-            const opt = state[catIdx].options[optIdx];
-            const badge = document.getElementById(`badge-${opt.id}`);
-            if (badge) {
-                const markdownPercent = opt.price > 0 ? Math.round(((opt.price - opt.bfPrice) / opt.price) * 100) : 0;
-                
-                badge.className = `text-[9px] font-extrabold px-2 py-0.5 rounded-full shrink-0 text-center ${opt.autoBF ? 'bg-emerald-950/80 border border-emerald-500/20 text-emerald-400' : 'bg-amber-950/80 border border-amber-500/20 text-amber-400'}`;
-                badge.innerHTML = `<i class="fa-solid ${opt.autoBF ? 'fa-wand-magic-sparkles' : 'fa-hand'} mr-1"></i>${opt.autoBF ? `${markdownPercent}% Est.` : `${markdownPercent}% Custom`}`;
-            }
-        }
+function startEdit(id) {
+  state.editingId = id;
+  renderComponents();
+}
 
-        // Dynamic Sweep to calculate all active auto BF items in the system
-        function recalculateAllDiscounts() {
-            state.forEach(cat => {
-                const categoryKey = cat.category;
-                const rate = categoryDiscountRates[categoryKey] || 0.10;
-                cat.options.forEach(opt => {
-                    if (opt.autoBF) {
-                        opt.bfPrice = Math.round(opt.price * (1 - rate));
-                    }
-                });
-            });
-            saveToLocalStorage();
-            renderApp(); // Complete visual recalculation re-render
-        }
+function commitEdit(id) {
+  const inp = document.getElementById('edit-' + id);
+  if (inp) {
+    const val = parseFloat(inp.value);
+    if (!isNaN(val) && val > 0) {
+      const c = state.components.find(c => c.id === id);
+      if (c) c.retailZAR = val;
+    }
+  }
+  state.editingId = null;
+  render();
+}
 
-        // --- 5. Math & LocalStorage Synchronization ---
-        function calculateTotalsSilent() {
-            let totalNormal = 0;
-            let totalBF = 0;
-            let totalSpent = 0;
+// ═══════════════════════════════════════════
+//  Master render
+// ═══════════════════════════════════════════
+function render() {
+  renderGPUs();
+  renderComponents();
+  renderBudget();
+  renderHeader();
+  renderTimeline();
+}
 
-            state.forEach(cat => {
-                const activeOpt = cat.options.find(o => o.active);
-                if (activeOpt) {
-                    const subEl = document.getElementById(`sub-${cat.id}`);
-                    if (subEl) {
-                        subEl.innerText = `${activeOpt.name} (R${activeOpt.price.toLocaleString('en-ZA')})`;
-                    }
-                }
-
-                cat.options.forEach(opt => {
-                    if (opt.active) {
-                        totalNormal += opt.price;
-                        totalBF += opt.bfPrice || opt.price;
-                        if (opt.obtained) {
-                            totalSpent += opt.price;
-                        }
-                    } else if (opt.obtained) {
-                        totalSpent += opt.price;
-                    }
-                });
-            });
-
-            document.getElementById('total-normal').innerText = `R${totalNormal.toLocaleString('en-ZA')}`;
-            document.getElementById('total-bf').innerText = `R${totalBF.toLocaleString('en-ZA')}`;
-            document.getElementById('total-spent').innerText = `R${totalSpent.toLocaleString('en-ZA')}`;
-            
-            const netRemaining = Math.max(0, totalNormal - totalSpent);
-            document.getElementById('net-remaining').innerText = `R${netRemaining.toLocaleString('en-ZA')}`;
-        }
-
-        function calculateTotals() {
-            calculateTotalsSilent();
-        }
-
-        function saveToLocalStorage() {
-            localStorage.setItem('za_pc_builder_snap_state', JSON.stringify(state));
-        }
-
-        // Loads data or initializes default snapshot
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('za_pc_builder_snap_state');
-            if (saved) {
-                try {
-                    state = JSON.parse(saved);
-                } catch(e) {
-                    console.error("Corrupted database found. Loading defaults.", e);
-                    state = JSON.parse(JSON.stringify(defaultBlueprint));
-                }
-            } else {
-                state = JSON.parse(JSON.stringify(defaultBlueprint));
-            }
-            renderApp();
-        }
-
-        // --- 6. Clean Setup Actions ---
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            if(confirm("Are you sure you want to revert to the default blueprint layout? Any custom entries or notes will be permanently cleared.")) {
-                localStorage.removeItem('za_pc_builder_snap_state');
-                loadFromLocalStorage();
-            }
-        });
-
-        // Initialize App
-        window.onload = loadFromLocalStorage;
-    </script>
+render();
+</script>
 </body>
 </html>

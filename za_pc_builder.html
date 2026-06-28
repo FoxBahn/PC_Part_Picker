@@ -252,7 +252,7 @@
     "subtitle": "Micro-ATX · AM5 · 4K Living Room Rig · Lian Li A3-mATX"
   },
   "financial": {
-    "startPool": 8000,
+    "startPool": 5303,
     "monthlyContrib": 5000,
     "startMonth": 6,
     "startYear": 2026,
@@ -376,7 +376,7 @@
       ]
     }
   ],
-  "activeGpuId": "gpu-rtx"
+  "activeGpuId": "gpu-rx"
 }
 </script>
 
@@ -466,18 +466,20 @@
 <div class="scenarios">
   <div class="section-label">Procurement Scenarios</div>
   <p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
-    Buying <strong style="color:#86efac">Case, PSU, CPU now</strong> as funds allow.
-    Holding <strong style="color:#fcd34d">RAM, Storage &amp; GPU</strong> — comparing retail-now vs waiting for Black Friday (conservative −5% floor / historical peak discount).
+    Buying <strong style="color:#86efac">Case, PSU, CPU at retail</strong> Jul–Aug as funds allow.
+    Holding <strong style="color:#fcd34d">RAM, Storage &amp; GPU</strong> for the Nov Black Friday window.
+    R5k/month to savings running <strong style="color:#22d3ee">in parallel</strong> — the long game wins on both PC cost and investment growth.
   </p>
   <div class="scenarios-grid" id="scenarios-grid"></div>
 </div>
 
 <div class="footer-note">
   <strong>Handover context: </strong>
-  Project AM5 SA rig · R8k start May 2026 · R5k/month from Jun 2026 · R17,451.27 lump sum Jan 2027 ·
+  Project AM5 SA rig · Start pool R5,303 (Jun 2026) · R5k/month PC contributions · R5k/month to investment (Path B — long game) · R17,451.27 lump sum Jan 2027 ·
   Obtained: Sapphire NITRO+ B850M, ID-Cooling FROZN A620 Black, ID-Cooling TF-12025 ARGB ×3 fans ·
-  GPU targets: RTX 5070 Ti (primary) / RX 9070 XT (alternative) · Target assembly: Dec 2026 ·
-  Design: minimalist two-tier ARGB lighting, Playnite console-style frontend.
+  GPU target: RX 9070 XT (primary) — AMD RDNA 4, PS6-architecture aligned, fits R36k budget ·
+  Strategy: Buy Case→PSU→CPU→RAM→SSD at retail as funds allow. Hold GPU for Nov BF window. Target assembly Dec 2026. ·
+  Post-build: redirect full R10k/month to investments. Path B projects R158k by Oct 2027 vs R125k for Path A.
 </div>
 
 </div><!-- /shell -->
@@ -741,125 +743,190 @@ function renderScenarios() {
   const F = state.financial;
   const gpu = getGPU();
 
-  // Items to buy NOW (retail, phased)
+  // Procurement order: Case → PSU → CPU at retail, RAM/SSD/GPU held for BF
   const buyNow = [
-    { name: 'Lian Li A3-mATX', price: 1599, when: 'Jul 2026' },
-    { name: 'Super Flower 850W ATX 3.1', price: 2199, when: 'Jul 2026' },
-    { name: 'AMD Ryzen 5 9600X', price: 4199, when: 'Aug 2026' }
+    { name: 'Lian Li A3-mATX', price: 1599, when: 'Jul 2026', note: 'Buy at retail — enables assembly' },
+    { name: 'Super Flower 850W ATX 3.1', price: 2199, when: 'Jul 2026', note: 'Buy at retail — locked in before GPU selection' },
+    { name: 'AMD Ryzen 5 9600X', price: 4199, when: 'Aug 2026', note: 'Buy at retail — no meaningful BF CPU discount expected' }
   ];
 
-  // Items to hold — BF candidates
   const holdItems = [
-    { name: 'XPG Lancer Blade RGB 32GB', retail: 8899, bfPeak: 0.18, bfFloor: 0.05 },
-    { name: 'Kioxia Exceria Plus G4 1TB', retail: 3299, bfPeak: 0.20, bfFloor: 0.05 },
-    { name: gpu ? gpu.name.split(' ').slice(0,4).join(' ') : 'GPU', retail: gpu ? gpu.retailZAR : 0, bfPeak: 0.10, bfFloor: 0.05 }
+    { name: 'XPG Lancer Blade RGB 32GB DDR5', retail: 8899, bfPeak: 0.18, bfFloor: 0.05, note: 'RAM historically strongest BF category (−18% avg)' },
+    { name: 'Kioxia Exceria Plus G4 1TB', retail: 3299, bfPeak: 0.20, bfFloor: 0.05, note: 'SSDs often biggest BF winners (−20% avg)' },
+    { name: gpu ? gpu.name.split(' ').slice(0,4).join(' ') : 'GPU', retail: gpu ? gpu.retailZAR : 0, bfPeak: 0.10, bfFloor: 0.05, note: 'GPU — hold for BF, biggest single item saving' }
   ];
 
-  const alreadySpent = 699 + 799 + 3199; // fans + cooler + mobo
-  const buyNowTotal = buyNow.reduce((s,i) => s + i.price, 0);
+  const alreadySpent = 699 + 799 + 3199;
+  const buyNowTotal  = buyNow.reduce((s,i) => s + i.price, 0);
+  const holdRetail   = holdItems.reduce((s,i) => s + i.retail, 0);
+  const holdBFPeak   = holdItems.reduce((s,i) => s + Math.round(i.retail*(1-i.bfPeak)), 0);
+  const holdBFFloor  = holdItems.reduce((s,i) => s + Math.round(i.retail*(1-i.bfFloor)), 0);
+  const totalBFPeak  = alreadySpent + buyNowTotal + holdBFPeak;
+  const totalBFFLoor = alreadySpent + buyNowTotal + holdBFFloor;
+  const totalRetail  = alreadySpent + buyNowTotal + holdRetail;
+  const savingPeak   = holdRetail - holdBFPeak;
+  const savingFloor  = holdRetail - holdBFFloor;
 
-  // Scenario A: buy everything at retail (no BF wait)
-  const holdRetail    = holdItems.reduce((s,i) => s + i.retail, 0);
-  const totalRetailA  = alreadySpent + buyNowTotal + holdRetail;
-
-  // Scenario B: hold RAM/SSD/GPU for BF (peak historical)
-  const holdBFPeak    = holdItems.reduce((s,i) => s + Math.round(i.retail*(1-i.bfPeak)), 0);
-  const totalBFPeak   = alreadySpent + buyNowTotal + holdBFPeak;
-  const savingPeak    = holdRetail - holdBFPeak;
-
-  // Scenario C: conservative BF (5% floor)
-  const holdBFFloor   = holdItems.reduce((s,i) => s + Math.round(i.retail*(1-i.bfFloor)), 0);
-  const totalBFFloor  = alreadySpent + buyNowTotal + holdBFFloor;
-  const savingFloor   = holdRetail - holdBFFloor;
-
-  // When can each savings rate afford the "buy now" chunk + hold retail total?
-  function affordTag(need, rate) {
-    const F2 = {...F, monthlyContrib: rate};
-    const months = [
-      [7,2026],[8,2026],[9,2026],[10,2026],[11,2026],[12,2026],[1,2027]
-    ];
-    for (const [m,y] of months) {
-      const n = monthsBetween(F2.startMonth, F2.startYear, m, y);
-      let pool = F2.startPool + n * rate;
-      const lumpN = monthsBetween(F2.startMonth, F2.startYear, F2.lumpSumMonth, F2.lumpSumYear);
-      if (n >= lumpN) pool += F2.lumpSumAmount;
-      if (pool >= need) return `${MONTHS[m]} ${y}`;
+  // Investment projection helper — monthly contributions compounding
+  // contributions start at investStart, each R5k/month, rate is annual
+  function investProjection(monthlyAmt, startM, startY, months, annualRate, lumpSum = 0) {
+    const r = annualRate / 12;
+    let total = lumpSum;
+    for (let i = 0; i < months; i++) {
+      total = (total + monthlyAmt) * (1 + r);
     }
-    return 'After Jan 2027';
+    return total;
   }
 
-  const rates = [
-    { label: 'R5k/month', rate: 5000, color: '#60a5fa', highlight: false },
-    { label: 'R10k/month', rate: 10000, color: '#22d3ee', highlight: true }
-  ];
+  // PATH A: R10k/month to PC, build done Sep 2026, invest R10k/month from Oct 2026
+  const pathA_pcCost   = totalRetail; // no BF, buys at retail
+  const pathA_inv1yr   = investProjection(10000, 10, 2026, 12, 0.09);
+  const pathA_inv2yr   = investProjection(10000, 10, 2026, 24, 0.09);
+  const pathA_inv3yr   = investProjection(10000, 10, 2026, 36, 0.09);
+  const pathA_buildDate = 'Sep 2026';
 
-  el.innerHTML = rates.map(({label, rate, color, highlight}) => {
-    const buyNowHtml = buyNow.map(i => `
-      <div class="phase-item">
-        <div class="phase-item-left">
-          <div class="phase-item-name">${i.name}</div>
-          <div class="phase-item-sub">Buy at retail · target ${i.when}</div>
-        </div>
-        <div class="phase-item-right">
-          <div class="price-main" style="color:#f8fafc">${fmtZAR(i.price)}</div>
-          <div class="afford-tag green">${affordTag(alreadySpent + buyNow.slice(0, buyNow.indexOf(i)+1).reduce((s,x)=>s+x.price,0), rate)}</div>
-        </div>
-      </div>`).join('');
+  // PATH B (ACTIVE): R5k/month to PC, R5k/month to savings from Jun 2026
+  // PC done Dec 2026 (BF GPU), invest R10k/month from Jan 2027
+  // Plus R25k pre-built from Jun-Nov savings already compounding
+  const pathB_pcCost   = totalBFPeak; // BF savings captured
+  const pathB_preInv   = investProjection(5000, 6, 2026, 6, 0.09); // ~R25.6k by Dec
+  const pathB_inv1yr   = investProjection(10000, 1, 2027, 10, 0.09, pathB_preInv); // 10 months to Oct 2027
+  const pathB_inv2yr   = investProjection(10000, 1, 2027, 22, 0.09, pathB_preInv);
+  const pathB_inv3yr   = investProjection(10000, 1, 2027, 34, 0.09, pathB_preInv);
+  const pathB_buildDate = 'Dec 2026';
+  const pathB_saving   = pathA_pcCost - pathB_pcCost;
 
-    const holdHtml = holdItems.map(i => {
-      const bfPeakPrice = Math.round(i.retail*(1-i.bfPeak));
-      const bfFloorPrice = Math.round(i.retail*(1-i.bfFloor));
-      return `
-      <div class="phase-item">
-        <div class="phase-item-left">
-          <div class="phase-item-name">${i.name}</div>
-          <div class="phase-item-sub">Hold for Nov BF window</div>
-        </div>
-        <div class="phase-item-right">
-          <div class="price-row" style="color:var(--muted);text-decoration:line-through">${fmtZAR(i.retail)} retail</div>
-          <div class="price-row" style="color:#f59e0b">BF best: ${fmtZAR(bfPeakPrice)}</div>
-          <div class="price-row" style="color:#94a3b8">BF floor: ${fmtZAR(bfFloorPrice)}</div>
-        </div>
-      </div>`;
-    }).join('');
-
+  function invRow(label, valA, valB) {
+    const diff = valB - valA;
+    const better = diff > 0 ? 'B' : 'A';
     return `
-    <div class="scenario-card ${highlight ? 'highlight' : ''}">
-      <div class="scenario-title" style="color:${color}">${label} savings</div>
-      <div class="scenario-subtitle">${highlight ? '← redirecting car payment' : 'current plan'}</div>
+    <div class="phase-item">
+      <div class="phase-item-left">
+        <div class="phase-item-name">${label}</div>
+        <div class="phase-item-sub">Path B leads by ${fmtZAR(Math.abs(diff))}</div>
+      </div>
+      <div class="phase-item-right" style="min-width:130px">
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted)">PATH A</div>
+            <div style="font-family:var(--mono);font-size:12px;color:#60a5fa">${fmtZAR(valA)}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:#22d3ee">PATH B ✓</div>
+            <div style="font-family:var(--mono);font-size:12px;color:#22d3ee">${fmtZAR(valB)}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
 
-      <div class="phase-block">
-        <span class="phase-label now">Buy Now — Retail</span>
-        ${buyNowHtml}
+  // Procurement phase rows
+  const buyNowHtml = buyNow.map(i => `
+    <div class="phase-item">
+      <div class="phase-item-left">
+        <div class="phase-item-name">${i.name}</div>
+        <div class="phase-item-sub">${i.note}</div>
       </div>
+      <div class="phase-item-right">
+        <div class="price-main" style="color:#f8fafc">${fmtZAR(i.price)}</div>
+        <div class="afford-tag green">${i.when}</div>
+      </div>
+    </div>`).join('');
 
-      <div class="phase-block">
-        <span class="phase-label wait">Hold for Black Friday</span>
-        ${holdHtml}
+  const holdHtml = holdItems.map(i => {
+    const bfP = Math.round(i.retail*(1-i.bfPeak));
+    const bfF = Math.round(i.retail*(1-i.bfFloor));
+    return `
+    <div class="phase-item">
+      <div class="phase-item-left">
+        <div class="phase-item-name">${i.name}</div>
+        <div class="phase-item-sub">${i.note}</div>
       </div>
-
-      <div class="scenario-total">
-        <span class="scenario-total-label">Total if BF delivers</span>
-        <span class="scenario-total-val" style="color:${color}">${fmtZAR(totalBFPeak)}</span>
-      </div>
-      <div class="scenario-saving">
-        <span class="scenario-saving-label">vs buying everything retail</span>
-        <span class="scenario-saving-val">save ${fmtZAR(savingPeak)}</span>
-      </div>
-      <div class="scenario-total" style="margin-top:6px">
-        <span class="scenario-total-label">Total if BF disappoints (−5%)</span>
-        <span class="scenario-total-val" style="color:#94a3b8">${fmtZAR(totalBFFloor)}</span>
-      </div>
-      <div class="scenario-saving">
-        <span class="scenario-saving-label">conservative saving</span>
-        <span class="scenario-saving-val" style="color:#94a3b8">${fmtZAR(savingFloor)}</span>
-      </div>
-
-      <div class="bf-risk-note">
-        ⚠ BF discounts in SA are not guaranteed. Historical averages used as peak estimates. A conservative −5% floor assumes limited stock or late deals.
+      <div class="phase-item-right">
+        <div class="price-row" style="color:var(--muted);text-decoration:line-through;font-size:11px">${fmtZAR(i.retail)}</div>
+        <div class="price-row" style="color:#f59e0b">BF best: ${fmtZAR(bfP)}</div>
+        <div class="price-row" style="color:#64748b">BF floor: ${fmtZAR(bfF)}</div>
       </div>
     </div>`;
   }).join('');
+
+  el.innerHTML = `
+  <!-- LEFT CARD: Procurement Plan -->
+  <div class="scenario-card highlight">
+    <div class="scenario-title" style="color:#22d3ee">Path B — The Long Game</div>
+    <div class="scenario-subtitle">R5k/month to PC · R5k/month to savings · BF GPU target · PC done Dec 2026</div>
+
+    <div class="phase-block">
+      <span class="phase-label now">Phase 1 — Buy at Retail (Jul–Aug)</span>
+      ${buyNowHtml}
+    </div>
+
+    <div class="phase-block">
+      <span class="phase-label wait">Phase 2 — Hold for Black Friday (Nov 2026)</span>
+      ${holdHtml}
+    </div>
+
+    <div class="scenario-total">
+      <span class="scenario-total-label">Total if BF delivers (historical avg)</span>
+      <span class="scenario-total-val" style="color:#22d3ee">${fmtZAR(totalBFPeak)}</span>
+    </div>
+    <div class="scenario-saving">
+      <span class="scenario-saving-label">saved vs full retail</span>
+      <span class="scenario-saving-val">−${fmtZAR(savingPeak)}</span>
+    </div>
+    <div class="scenario-total" style="margin-top:6px">
+      <span class="scenario-total-label">Total if BF disappoints (−5% floor)</span>
+      <span class="scenario-total-val" style="color:#64748b">${fmtZAR(totalBFFLoor)}</span>
+    </div>
+    <div class="scenario-saving">
+      <span class="scenario-saving-label">worst case saving</span>
+      <span class="scenario-saving-val" style="color:#64748b">−${fmtZAR(savingFloor)}</span>
+    </div>
+
+    <div class="bf-risk-note">
+      💡 Simultaneously: R5k/month into savings from Jun 2026 builds ~${fmtZAR(pathB_preInv)} by Dec — already compounding before the PC is even assembled. Post-build, full R10k/month redirects to investment.
+    </div>
+  </div>
+
+  <!-- RIGHT CARD: Investment comparison -->
+  <div class="scenario-card">
+    <div class="scenario-title" style="color:#60a5fa">Investment Projection @ 9% p.a.</div>
+    <div class="scenario-subtitle">Path A = build fast, invest later · Path B = invest in parallel, BF savings</div>
+
+    <div class="phase-block">
+      <span class="phase-label now">PC Cost Difference</span>
+      <div class="phase-item">
+        <div class="phase-item-left">
+          <div class="phase-item-name">Path A — full retail, no BF</div>
+          <div class="phase-item-sub">Built Sep 2026, R10k/month invested from Oct</div>
+        </div>
+        <div class="phase-item-right">
+          <div class="price-main" style="color:#60a5fa">${fmtZAR(pathA_pcCost)}</div>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-item-left">
+          <div class="phase-item-name">Path B — R5k/month + BF GPU</div>
+          <div class="phase-item-sub">Built Dec 2026, investing in parallel from Jun</div>
+        </div>
+        <div class="phase-item-right">
+          <div class="price-main" style="color:#22d3ee">${fmtZAR(pathB_pcCost)}</div>
+          <div class="comp-saving">−${fmtZAR(pathB_saving)} cheaper</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <span class="phase-label wait">Investment Account Value</span>
+      ${invRow('By Oct 2027 (1 year)', pathA_inv1yr, pathB_inv1yr)}
+      ${invRow('By Oct 2028 (2 years)', pathA_inv2yr, pathB_inv2yr)}
+      ${invRow('By Oct 2029 (3 years)', pathA_inv3yr, pathB_inv3yr)}
+    </div>
+
+    <div class="bf-risk-note">
+      📈 Path B's advantage compounds over time — starting the investment account 4 months earlier plus the BF saving means ~R35–37k more in your pocket by 2029. The PC costs less <em>and</em> the investment grows more. Playing the long game wins on both fronts.
+    </div>
+  </div>`;
 }
 
 // ═══════════════════════════════════════════

@@ -62,7 +62,7 @@
 
   /* ── GPU selector ── */
   .section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
-  .gpu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .gpu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
   .gpu-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
     padding: 16px 18px; cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: left; width: 100%;
@@ -354,14 +354,38 @@
   ],
   "gpuOptions": [
     {
-      "id": "gpu-rx",
-      "name": "XFX Speedster MERC 310 RX 9070 XT 16GB",
+      "id": "gpu-gigabyte",
+      "name": "Gigabyte RX 9070 XT Gaming OC 16GB",
       "retailZAR": 14999,
       "bfDiscount": 0.10,
-      "note": "AMD RDNA 4 · 16GB VRAM · 256-bit bus",
+      "note": "⭐ Top Pick · Vapour chamber · Dual BIOS Silent mode · Best value",
       "links": [
-        { "label": "Evetech", "url": "https://www.evetech.co.za/xfx-quicksilver-radeon-rx-9070-xt-16gb-graphics-card/best-deal/22433" },
-        { "label": "Wootware", "url": "https://www.wootware.co.za/amd-radeon-rx-9070-xt.html" }
+        { "label": "Compuden", "url": "https://compuden.co.za/products/gigabyte-amd-radeon-rx9070xt-gaming-oc-16gb" },
+        { "label": "Evetech", "url": "https://www.evetech.co.za/amd-radeon-rx-9070-xt-graphics-cards/x/1743" },
+        { "label": "Wootware", "url": "https://www.wootware.co.za/computer-hardware/video-cards-video-devices/shopby/radeon_rx_9070_xt" }
+      ]
+    },
+    {
+      "id": "gpu-asus-tuf",
+      "name": "ASUS TUF Gaming RX 9070 XT OC 16GB",
+      "retailZAR": 16639,
+      "bfDiscount": 0.10,
+      "note": "Military-grade components · 3-year longevity build · Premium tier",
+      "links": [
+        { "label": "Bobshop", "url": "https://www.bobshop.co.za/asus-tuf-gaming-radeon-rx-9070-xt-oc-edition-16gb-gddr6-graphics-card/p/644570517" },
+        { "label": "Wootware", "url": "https://www.wootware.co.za/asus-radeon-rx-9070-xt-tuf-gaming-oc-tuf-rx9070xt-o16g-gaming-16gb-gddr6-256-bit-pcie-5-0-desktop-graphics-card.html" },
+        { "label": "tech.co.za", "url": "https://tech.co.za/product/asus-tuf-gaming-radeon-rx-9070-xt-oc-edition-16gb-gddr6-graphics-card/" }
+      ]
+    },
+    {
+      "id": "gpu-xfx",
+      "name": "XFX Swift RX 9070 XT 16GB",
+      "retailZAR": 14999,
+      "bfDiscount": 0.10,
+      "note": "Solid alternative · Triple fan · Clean design · Evetech stock",
+      "links": [
+        { "label": "Evetech", "url": "https://www.evetech.co.za/xfx-swift-rx-9070-xt-16gb/best-deal/23075" },
+        { "label": "Wootware", "url": "https://www.wootware.co.za/computer-hardware/video-cards-video-devices/shopby/radeon_rx_9070_xt" }
       ]
     },
     {
@@ -369,14 +393,14 @@
       "name": "Palit RTX 5070 Ti GamingPro S 16GB GDDR7",
       "retailZAR": 17999,
       "bfDiscount": 0.10,
-      "note": "NVIDIA Blackwell · 16GB GDDR7 · 256-bit bus",
+      "note": "NVIDIA option · DLSS/MFG advantage · R3k premium over AMD",
       "links": [
         { "label": "Evetech", "url": "https://www.evetech.co.za/palit-geforce-rtx-5070-ti-gamingpro-s-16gb-gddr7/best-deal/24135" },
         { "label": "Wootware", "url": "https://www.wootware.co.za/nvidia-geforce-rtx-5070-ti.html" }
       ]
     }
   ],
-  "activeGpuId": "gpu-rx"
+  "activeGpuId": "gpu-gigabyte"
 }
 </script>
 

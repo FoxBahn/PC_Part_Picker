@@ -657,17 +657,17 @@ function renderGPUs() {
     return `
     <button class="gpu-card ${active ? 'active' : ''}" onclick="selectGPU('${gpu.id}')">
       <div class="gpu-card-top">
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="gpu-badge ${active ? 'active' : 'inactive'}">${active ? '✓ SELECTED' : 'ALTERNATIVE'}</div>
           <div class="gpu-name">${gpu.name}</div>
           <div class="gpu-note">${gpu.note}</div>
-          <div style="margin-top:6px">${linksHtml}</div>
         </div>
         <div class="gpu-prices">
           <div class="price-retail">${fmtZAR(gpu.retailZAR)}</div>
           <div class="price-bf">BF: ${fmtZAR(bf)}</div>
         </div>
       </div>
+      <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">${linksHtml}</div>
     </button>`;
   }).join('');
 }

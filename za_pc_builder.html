@@ -322,12 +322,14 @@
       "id": "ssd",
       "category": "Storage",
       "icon": "💿",
-      "name": "Kioxia Exceria Plus G4 1TB NVMe",
-      "retailZAR": 3299,
+      "name": "WD Blue SN5100 1TB NVMe PCIe 4.0",
+      "retailZAR": 3237,
       "bfDiscount": 0.2,
       "obtained": false,
-      "note": "PCIe Gen4, primary OS + games drive",
-      "link": "https://www.wootware.co.za/kioxia-lsf10z001tg8-exceria-basic-g4-1tb-m-2-2280-pcie-4-0-x4-nvme-solid-state-drive.html"
+      "note": "⭐ Best pick · 7,100/6,700 MB/s · 600 TBW · 5yr warranty · Beats Kioxia on writes · R62 cheaper · Alt: Crucial P310 R3,093 (7,100/6,000 MB/s, 5yr) — same reads, slower writes but R144 cheaper",
+      "link": "https://distrinode.co.za/western-digital-1tb-wd-blue-sn5100-nvme-ssd-wds100t5b0e",
+      "link2": "https://distrinode.co.za/internal-m-2-nvme-ssd-crucial-p310-1-tb-pcie-4-0-7100-6000-mb-s-ct1000p310ssd8-t",
+      "link2label": "Alt: Crucial P310 R3,093"
     },
     {
       "id": "psu",
@@ -617,7 +619,7 @@ function renderComponents() {
     const price = state.showBF ? bf : c.retailZAR;
     const isEditing = state.editingId === c.id;
     const linkHtml = c.link
-      ? `<a class="comp-link" href="${c.link}" target="_blank" rel="noopener">↗ View product</a>`
+      ? `<a class="comp-link" href="${c.link}" target="_blank" rel="noopener">↗ View product</a>${c.link2 ? ` <a class="comp-link" href="${c.link2}" target="_blank" rel="noopener">↗ ${c.link2label || 'Alternative'}</a>` : ''}`
       : '';
     const priceHtml = isEditing
       ? `<input class="price-input" id="edit-${c.id}" type="number" value="${c.retailZAR}"
@@ -790,7 +792,7 @@ function renderScenarios() {
 
   const holdItems = [
     { name: 'Patriot Viper Venom RGB 32GB DDR5', retail: 8435, bfPeak: 0.18, bfFloor: 0.05, note: 'RAM historically strongest BF category (−18% avg)' },
-    { name: 'Kioxia Exceria Plus G4 1TB', retail: 3299, bfPeak: 0.20, bfFloor: 0.05, note: 'SSDs often biggest BF winners (−20% avg)' },
+    { name: 'WD Blue SN5100 1TB NVMe', retail: 3237, bfPeak: 0.20, bfFloor: 0.05, note: 'SSDs often biggest BF winners (−20% avg) · Alt: Crucial P310 R3,093' },
     { name: gpu ? gpu.name.split(' ').slice(0,4).join(' ') : 'GPU', retail: gpu ? gpu.retailZAR : 0, bfPeak: 0.10, bfFloor: 0.05, note: 'GPU — hold for BF, biggest single item saving' }
   ];
 

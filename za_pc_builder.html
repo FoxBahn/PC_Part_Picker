@@ -755,37 +755,90 @@ function renderGPUs() {
 // ═══════════════════════════════════════════
 function renderComponents() {
   const el = document.getElementById('comp-list');
-  el.innerHTML = state.components.map(c => {
-    const bf = Math.round(c.retailZAR * (1 - c.bfDiscount));
+
+  // Build display list: fixed components (excl psu/ram) + selected PSU + selected RAM + selected GPU
+  const psu = getPSU();
+  const ram = getRAM();
+  const gpu = getGPU();
+
+  // Fixed components excluding psu and ram (those are driven by selectors)
+  const fixedComps = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram');
+
+  // Build synthetic entries for PSU, RAM, GPU from selectors
+  function selectorEntry(opt, category, icon, toggleId) {
+    return {
+      ...opt,
+      category,
+      icon,
+      obtained: false,
+      _selectorId: toggleId,
+      _isSelector: true
+    };
+  }
+
+  const displayList = [
+    ...fixedComps,
+    psu ? selectorEntry(psu, 'Power Supply', '🔌', 'psu') : null,
+    ram ? selectorEntry(ram, 'Memory', '💾', 'ram') : null,
+    gpu ? selectorEntry(gpu, 'Graphics Card', '🎮', 'gpu') : null,
+  ].filter(Boolean);
+
+  el.innerHTML = displayList.map(c => {
+    const bf = Math.round(c.retailZAR * (1 - (c.bfDiscount || 0.1)));
     const saving = c.retailZAR - bf;
     const price = state.showBF ? bf : c.retailZAR;
     const isEditing = state.editingId === c.id;
-    const linkHtml = c.link
-      ? `<a class="comp-link" href="${c.link}" target="_blank" rel="noopener">↗ View product</a>${c.link2 ? ` <a class="comp-link" href="${c.link2}" target="_blank" rel="noopener">↗ ${c.link2label || 'Alternative'}</a>` : ''}`
-      : '';
+
+    // Links — support both single link and links array
+    let linkHtml = '';
+    if (c.links && c.links.length) {
+      linkHtml = c.links.map(l => `<a class="comp-link" href="${l.url}" target="_blank" rel="noopener">↗ ${l.label}</a>`).join(' ');
+    } else if (c.link) {
+      linkHtml = `<a class="comp-link" href="${c.link}" target="_blank" rel="noopener">↗ View product</a>`;
+      if (c.link2) linkHtml += ` <a class="comp-link" href="${c.link2}" target="_blank" rel="noopener">↗ ${c.link2label || 'Alternative'}</a>`;
+    }
+
+    // Selector entries (PSU/RAM/GPU) get a "SELECTED" badge and a change button
+    // Fixed obtained entries get green treatment
+    // Fixed not-obtained get normal treatment
+    const isSelector = c._isSelector;
+    const isOwned = c.obtained;
+
+    const rowClass = isOwned ? 'owned' : isSelector ? 'selector-row' : '';
+
     const priceHtml = isEditing
       ? `<input class="price-input" id="edit-${c.id}" type="number" value="${c.retailZAR}"
            onblur="commitEdit('${c.id}')" onkeydown="if(event.key==='Enter')commitEdit('${c.id}')">`
-      : `<div class="comp-price" onclick="${c.obtained ? '' : `startEdit('${c.id}')`}"
-              title="${c.obtained ? '' : 'Click to update price'}">${fmtZAR(price)}</div>`;
-    const savingHtml = state.showBF && !c.obtained
-      ? `<div class="comp-saving">−${fmtZAR(saving)}</div>` : '';
-    const ownedHtml = c.obtained
-      ? `<div class="comp-owned-label">OWNED</div>` : '';
+      : `<div class="comp-price" onclick="${(!isOwned && !isSelector) ? `startEdit('${c.id}')` : ''}"
+              style="color:${isOwned ? '#6ee7b7' : isSelector ? 'var(--cyan)' : 'var(--text)'};cursor:${(!isOwned && !isSelector) ? 'pointer' : 'default'}"
+              title="${(!isOwned && !isSelector) ? 'Click to update price' : ''}">${fmtZAR(price)}</div>`;
+
+    const savingHtml = state.showBF && !isOwned ? `<div class="comp-saving">−${fmtZAR(saving)}</div>` : '';
+
+    const statusHtml = isOwned
+      ? `<div class="comp-owned-label">OWNED</div>`
+      : isSelector
+      ? `<div style="font-size:10px;font-weight:700;color:var(--cyan)">SELECTED</div>`
+      : '';
+
+    const checkBtn = isSelector
+      ? `<div style="width:22px;height:22px;border-radius:6px;border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--cyan);flex-shrink:0">↕</div>`
+      : `<button class="check-btn ${isOwned ? 'checked' : ''}" onclick="toggleOwned('${c.id}')">${isOwned ? '✓' : ''}</button>`;
+
     return `
-    <div class="comp-row ${c.obtained ? 'owned' : ''}">
-      <button class="check-btn ${c.obtained ? 'checked' : ''}" onclick="toggleOwned('${c.id}')">${c.obtained ? '✓' : ''}</button>
+    <div class="comp-row ${rowClass}" style="${isSelector ? 'border-color:var(--border2);' : ''}">
+      ${checkBtn}
       <div class="comp-icon">${c.icon}</div>
       <div class="comp-info">
         <div class="comp-cat">${c.category}</div>
-        <div class="comp-name">${c.name}</div>
-        <div class="comp-note">${c.note}</div>
+        <div class="comp-name" style="color:${isOwned ? '#86efac' : isSelector ? '#e2e8f0' : 'var(--text)'}">${c.name}</div>
+        <div class="comp-note">${c.note || ''}</div>
         ${linkHtml}
       </div>
       <div class="comp-price-block">
         ${priceHtml}
         ${savingHtml}
-        ${ownedHtml}
+        ${statusHtml}
       </div>
     </div>`;
   }).join('');

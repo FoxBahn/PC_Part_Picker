@@ -60,6 +60,24 @@
   .bar-track { background: var(--surface2); border-radius: 99px; height: 8px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
 
+  /* ── Option selectors (GPU / PSU / RAM) ── */
+  .option-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+  .option-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+  .option-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 14px; cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: left; width: 100%;
+  }
+  .option-card.active { border-color: var(--blue); background: var(--blue-dim); }
+  .option-card-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .option-card-note { font-size: 10px; color: var(--muted); line-height: 1.4; }
+  .option-card-price { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--green); margin-top: 5px; }
+  .option-card-bf { font-family: var(--mono); font-size: 10px; color: var(--amber); }
+  .option-card-links { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+  @media (max-width: 720px) {
+    .option-grid { grid-template-columns: 1fr 1fr; }
+    .option-grid.two-col { grid-template-columns: 1fr; }
+  }
+
   /* ── GPU selector ── */
   .section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
   .gpu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
@@ -369,19 +387,6 @@
       ]
     },
     {
-      "id": "gpu-xfx",
-      "name": "XFX Swift RX 9070 XT 16GB",
-      "retailZAR": 12999,
-      "bfDiscount": 0.1,
-      "note": "💰 Budget pick · Triple fan · Nickel copper cold plate · Evetech stock",
-      "links": [
-        {
-          "label": "Evetech",
-          "url": "https://www.evetech.co.za/xfx-swift-rx-9070-xt-16gb/best-deal/23075"
-        }
-      ]
-    },
-    {
       "id": "gpu-gigabyte",
       "name": "Gigabyte RX 9070 XT Gaming OC 16GB",
       "retailZAR": 13720,
@@ -416,7 +421,104 @@
       ]
     }
   ],
-  "activeGpuId": "gpu-gigabyte"
+  "activeGpuId": "gpu-gigabyte",
+  "psuOptions": [
+    {
+      "id": "psu-seasonic",
+      "name": "Seasonic Core GC-750 750W ATX 3.1",
+      "retailZAR": 1856,
+      "bfDiscount": 0.12,
+      "note": "⭐ For 9070 XT · 5yr warranty · 80+ Gold · Fully modular · ATX 3.1 · Best value",
+      "links": [
+        {
+          "label": "Distrinode",
+          "url": "https://distrinode.co.za/power-supply-unit-seasonic-core-gc-750-atx-3-1-750-w-24-pin-atx-fully-modular-80-plus-gold-black-srp-cgc751-a5a32sf"
+        }
+      ]
+    },
+    {
+      "id": "psu-superflower",
+      "name": "Super Flower Leadex III GE 850W ATX 3.1",
+      "retailZAR": 2199,
+      "bfDiscount": 0.12,
+      "note": "For 9070 XT · 10yr warranty · 100W extra headroom · Premium brand",
+      "links": [
+        {
+          "label": "Wootware",
+          "url": "https://www.wootware.co.za/super-flower-sf-850f14ge-leadex-iii-ge-850w-80-plus-gold-atx-3-1-fully-modular-black-desktop-power-supply.html"
+        }
+      ]
+    },
+    {
+      "id": "psu-gigabyte",
+      "name": "Gigabyte UD1000GM PG5 V2 1000W ATX 3.1",
+      "retailZAR": 2219,
+      "bfDiscount": 0.12,
+      "note": "⚡ For RTX 5070 Ti ONLY · 1000W required · 80+ Gold · Fully modular · 10yr warranty",
+      "links": [
+        {
+          "label": "Distrinode",
+          "url": "https://distrinode.co.za/power-supply-unit-gigabyte-ud1000gm-pg5-v2-1000w-atx-3-1-fully-modular-80-plus-gold-white-gp-ud1000gm-pg5-ice-eu"
+        }
+      ]
+    }
+  ],
+  "activePsuId": "psu-seasonic",
+  "ramOptions": [
+    {
+      "id": "ram-patriot-rgb",
+      "name": "Patriot Viper Venom RGB 32GB DDR5-6000 CL30",
+      "retailZAR": 8435,
+      "bfDiscount": 0.18,
+      "note": "⭐ Top Pick · RGB lighting · DDR5-6000 CL30 · 1:1 FCLK · Hynix A-die",
+      "links": [
+        {
+          "label": "Distrinode",
+          "url": "https://distrinode.co.za/ddr5-32gb-2x16gb-6000mt-s-gaming-ram-patriot-klevv-cras-v-with-heatsink-cl30-1-35v-xmp-3-0-rgb-pvvr532g600c30k"
+        }
+      ]
+    },
+    {
+      "id": "ram-patriot-plain",
+      "name": "Patriot PVV 32GB DDR5-6000 CL30 (no RGB)",
+      "retailZAR": 8070,
+      "bfDiscount": 0.18,
+      "note": "💰 Budget pick · No RGB · Same CL30 performance · R365 cheaper",
+      "links": [
+        {
+          "label": "Distrinode",
+          "url": "https://distrinode.co.za/patriot-pvv532g600c30k-memory-module"
+        }
+      ]
+    },
+    {
+      "id": "ram-gskill",
+      "name": "G.Skill Flare X5 32GB DDR5-6000 CL30 EXPO",
+      "retailZAR": 8748,
+      "bfDiscount": 0.18,
+      "note": "OC headroom · AMD EXPO tuned · Best binned ICs · CL28 potential · R313 more than Patriot RGB",
+      "links": [
+        {
+          "label": "Distrinode",
+          "url": "https://distrinode.co.za/g-skill-flare-x5-expo-32gb-2x16gb-ddr5-c30-6000mhz-dual-channel-kit-f5-6000j3038f16gx2-fx5"
+        }
+      ]
+    },
+    {
+      "id": "ram-xpg",
+      "name": "XPG Lancer Blade RGB 32GB DDR5-6000 CL30",
+      "retailZAR": 8899,
+      "bfDiscount": 0.18,
+      "note": "Original pick · Low-profile · Slim heatspreader · R464 more than Patriot RGB",
+      "links": [
+        {
+          "label": "Wootware",
+          "url": "https://www.wootware.co.za/recertified-xpg-ax5u6000c3016g-dtlabrbk-lancer-blade-rgb-32gb-2x16gb-ddr5-6000mhz-cl30-1-35v-black-desktop-memory.html"
+        }
+      ]
+    }
+  ],
+  "activeRamId": "ram-patriot-rgb"
 }
 </script>
 
@@ -447,6 +549,12 @@
 
 <div class="section-label">Target GPU — select one</div>
 <div class="gpu-grid" id="gpu-grid"></div>
+
+<div class="section-label" style="margin-top:4px">Power Supply — select one</div>
+<div class="option-grid" id="psu-grid"></div>
+
+<div class="section-label">Memory — select one</div>
+<div class="option-grid" id="ram-grid"></div>
 
 <div class="main-grid">
   <div>
@@ -533,6 +641,10 @@ let state = {
   components:  RAW.components.map(c => ({...c})),
   gpuOptions:  RAW.gpuOptions.map(g => ({...g})),
   activeGpuId: RAW.activeGpuId,
+  psuOptions:  RAW.psuOptions.map(p => ({...p})),
+  activePsuId: RAW.activePsuId,
+  ramOptions:  RAW.ramOptions.map(r => ({...r})),
+  activeRamId: RAW.activeRamId,
   financial:   RAW.financial,
   showBF:      false,
   editingId:   null
@@ -571,17 +683,47 @@ function fmtZAR(n) { return 'R' + Math.round(n).toLocaleString('en-ZA'); }
 //  Derived totals
 // ═══════════════════════════════════════════
 function getGPU()       { return state.gpuOptions.find(g => g.id === state.activeGpuId); }
-function allActive()    { return [...state.components, getGPU()].filter(Boolean); }
+function getPSU()       { return state.psuOptions.find(p => p.id === state.activePsuId); }
+function getRAM()       { return state.ramOptions.find(r => r.id === state.activeRamId); }
+function allActive() {
+  // Use selected PSU and RAM instead of component list entries
+  const base = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram');
+  return [...base, getPSU(), getRAM(), getGPU()].filter(Boolean);
+}
 function obtained()     { return allActive().filter(c => c.obtained); }
 function remaining()    { return allActive().filter(c => !c.obtained); }
 function totalSpent()   { return obtained().reduce((s,c) => s + c.retailZAR, 0); }
 function totalRetail()  { return allActive().reduce((s,c) => s + c.retailZAR, 0); }
 function remainRetail() { return remaining().reduce((s,c) => s + c.retailZAR, 0); }
-function remainBF()     { return remaining().reduce((s,c) => s + Math.round(c.retailZAR*(1-c.bfDiscount)), 0); }
+function remainBF()     { return remaining().reduce((s,c) => s + Math.round(c.retailZAR*(1-(c.bfDiscount||0.1))), 0); }
 
 // ═══════════════════════════════════════════
 //  GPU cards
 // ═══════════════════════════════════════════
+function renderOptionGrid(elId, options, activeId, selectFn) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = options.map(opt => {
+    const active = opt.id === activeId;
+    const bf = Math.round(opt.retailZAR * (1 - (opt.bfDiscount || 0.1)));
+    const linksHtml = (opt.links || []).map(l =>
+      `<a class="gpu-link" href="${l.url}" target="_blank" rel="noopener">↗ ${l.label}</a>`
+    ).join(' ');
+    return `
+    <button class="option-card ${active ? 'active' : ''}" onclick="${selectFn}('${opt.id}')">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:${active ? 'var(--cyan)' : 'var(--muted)'};margin-bottom:4px">${active ? '✓ SELECTED' : 'OPTION'}</div>
+      <div class="option-card-name">${opt.name}</div>
+      <div class="option-card-note">${opt.note}</div>
+      <div class="option-card-price">${fmtZAR(opt.retailZAR)}</div>
+      <div class="option-card-bf">BF est: ${fmtZAR(bf)}</div>
+      <div class="option-card-links">${linksHtml}</div>
+    </button>`;
+  }).join('');
+}
+
+function renderPSUs() { renderOptionGrid('psu-grid', state.psuOptions, state.activePsuId, 'selectPSU'); }
+function renderRAMs() { renderOptionGrid('ram-grid', state.ramOptions, state.activeRamId, 'selectRAM'); }
+
 function renderGPUs() {
   const el = document.getElementById('gpu-grid');
   el.innerHTML = state.gpuOptions.map(gpu => {
@@ -737,6 +879,16 @@ function renderTimeline() {
 // ═══════════════════════════════════════════
 function selectGPU(id) {
   state.activeGpuId = id;
+  render();
+}
+
+function selectPSU(id) {
+  state.activePsuId = id;
+  render();
+}
+
+function selectRAM(id) {
+  state.activeRamId = id;
   render();
 }
 
@@ -974,6 +1126,8 @@ function renderScenarios() {
 // ═══════════════════════════════════════════
 function render() {
   renderGPUs();
+  renderPSUs();
+  renderRAMs();
   renderComponents();
   renderBudget();
   renderHeader();

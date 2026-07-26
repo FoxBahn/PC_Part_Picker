@@ -68,6 +68,7 @@
     padding: 12px 14px; cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: left; width: 100%;
   }
   .option-card.active { border-color: var(--blue); background: var(--blue-dim); }
+  .option-card.owned { border-color: #166534; background: var(--green-dim); }
   .option-card-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
   .option-card-note { font-size: 10px; color: var(--muted); line-height: 1.4; }
   .option-card-price { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--green); margin-top: 5px; }
@@ -684,12 +685,15 @@ function renderOptionGrid(elId, options, activeId, selectFn) {
     const linksHtml = (opt.links || []).map(l =>
       `<a class="gpu-link" href="${l.url}" target="_blank" rel="noopener">↗ ${l.label}</a>`
     ).join(' ');
+    const owned = !!opt.obtained;
+    const badgeLabel = owned ? '✅ OWNED' : (active ? '✓ SELECTED' : 'OPTION');
+    const badgeColor = owned ? '#34d399' : (active ? 'var(--cyan)' : 'var(--muted)');
     return `
-    <button class="option-card ${active ? 'active' : ''}" onclick="${selectFn}('${opt.id}')">
-      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:${active ? 'var(--cyan)' : 'var(--muted)'};margin-bottom:4px">${active ? '✓ SELECTED' : 'OPTION'}</div>
-      <div class="option-card-name">${opt.name}</div>
+    <button class="option-card ${active ? 'active' : ''} ${owned ? 'owned' : ''}" onclick="${selectFn}('${opt.id}')">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:${badgeColor};margin-bottom:4px">${badgeLabel}</div>
+      <div class="option-card-name" style="color:${owned ? '#86efac' : 'var(--text)'}">${opt.name}</div>
       <div class="option-card-note">${opt.note}</div>
-      <div class="option-card-price">${fmtZAR(opt.retailZAR)}</div>
+      <div class="option-card-price" style="color:${owned ? '#6ee7b7' : 'var(--green)'}">${fmtZAR(opt.retailZAR)}</div>
       <div class="option-card-bf">BF est: ${fmtZAR(bf)}</div>
       <div class="option-card-links">${linksHtml}</div>
     </button>`;

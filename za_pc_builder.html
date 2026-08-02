@@ -55,10 +55,24 @@
 
   /* ── Progress bar ── */
   .runway { margin-top: 20px; }
-  .runway-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .runway-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
   .runway-labels b { font-family: var(--mono); color: var(--amber); }
-  .bar-track { background: var(--surface2); border-radius: 99px; height: 8px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+  .runway-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .runway-pill {
+    flex: 1; min-width: 70px; border-radius: 10px; padding: 8px 10px;
+    border: 1px solid var(--border2); position: relative; overflow: hidden;
+  }
+  .runway-pill-fill {
+    position: absolute; inset: 0; z-index: 0; transition: width 0.5s ease;
+    border-radius: 10px 0 0 10px;
+  }
+  .runway-pill-content { position: relative; z-index: 1; }
+  .runway-pill-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 2px; }
+  .runway-pill-price { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--text); }
+  .runway-pill.funded { border-color: #4a5c30; }
+  .runway-pill.owned-pill { background: var(--green-dim); border-color: #4a5c30; }
+  .runway-pill.owned-pill .runway-pill-label { color: #8a9a5b; }
+  .runway-pill.owned-pill .runway-pill-price { color: #a8b87a; }
 
   /* ── Option selectors (GPU / PSU / RAM) ── */
   .option-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
@@ -600,10 +614,10 @@
   </div>
   <div class="runway">
     <div class="runway-labels">
-      <span>Savings runway to full retail build</span>
-      <span><b id="runway-current">R0</b> / <b id="runway-need">R0</b></span>
+      <span>Savings runway — remaining parts</span>
+      <span><b id="runway-current">R0</b> saved</span>
     </div>
-    <div class="bar-track"><div class="bar-fill" id="runway-bar" style="width:0%"></div></div>
+    <div class="runway-pills" id="runway-pills"></div>
   </div>
 </header>
 
@@ -643,16 +657,6 @@
           <div class="ready-label">BF pricing — can buy</div>
           <div class="ready-date" id="b-bf-date" style="color:#c9773b">—</div>
         </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Savings Timeline</div>
-      <div class="timeline-rows" id="timeline"></div>
-      <div class="legend">
-        <span style="color:#b5652f">▬ saving</span>
-        <span style="color:#c9773b">▬ BF ready</span>
-        <span style="color:#7d8f52">▬ retail ready</span>
       </div>
     </div>
 
@@ -725,27 +729,6 @@ const NOW_M = 6, NOW_Y = 2026;
 // ═══════════════════════════════════════════
 //  Finance helpers
 // ═══════════════════════════════════════════
-function monthsBetween(fm, fy, tm, ty) { return (ty - fy) * 12 + (tm - fm); }
-
-function savingsAt(m, y) {
-  const F = state.financial;
-  const n = monthsBetween(F.startMonth, F.startYear, m, y);
-  if (n < 0) return F.startPool; // before savings started
-  let total = F.startPool + n * F.monthlyContrib;
-  const lumpN = monthsBetween(F.startMonth, F.startYear, F.lumpSumMonth, F.lumpSumYear);
-  if (n >= lumpN) total += F.lumpSumAmount;
-  return total;
-}
-
-function affordableMonth(need) {
-  for (let y = 2026; y <= 2028; y++)
-    for (let m = 1; m <= 12; m++) {
-      if (y === 2026 && m < state.financial.startMonth) continue;
-      if (savingsAt(m, y) >= need) return {m, y};
-    }
-  return null;
-}
-
 function fmtZAR(n) { return 'R' + Math.round(n).toLocaleString('en-ZA'); }
 
 // ═══════════════════════════════════════════
@@ -842,7 +825,7 @@ function renderComponents() {
       ...opt,
       category,
       icon,
-      obtained: false,
+      obtained: !!opt.obtained,
       _selectorId: toggleId,
       _isSelector: true
     };
@@ -925,36 +908,52 @@ function renderComponents() {
 //  Budget sidebar
 // ═══════════════════════════════════════════
 function renderBudget() {
-  const F = state.financial;
-  const pool = savingsAt(NOW_M, NOW_Y);
-  const bfPool = savingsAt(F.bfMonth, F.bfYear);
   const rr = remainRetail();
   const rb = remainBF();
-  const canBF = bfPool >= rb;
+  const pool = currentSavingsPool();
 
   document.getElementById('b-spent').textContent   = fmtZAR(totalSpent());
   document.getElementById('b-remain').textContent  = fmtZAR(rr);
   document.getElementById('b-bf').textContent      = fmtZAR(rb);
   document.getElementById('b-pool').textContent    = fmtZAR(pool);
-  document.getElementById('b-bfpool').textContent  = fmtZAR(bfPool);
+
+  const canBF = pool >= rb;
+  document.getElementById('b-bfpool').textContent  = fmtZAR(pool);
   document.getElementById('b-bfpool').style.color  = canBF ? '#7d8f52' : '#c9773b';
 
-  const retailAt = affordableMonth(rr);
-  const bfAt = affordableMonth(rb);
-  document.getElementById('b-retail-date').textContent = retailAt ? `${MONTHS[retailAt.m]} ${retailAt.y}` : 'After lump sum';
-  document.getElementById('b-bf-date').textContent     = bfAt ? `${MONTHS[bfAt.m]} ${bfAt.y}` : 'After lump sum';
+  const readyRetail = pool >= rr;
+  const readyBF = pool >= rb;
+  document.getElementById('b-retail-date').textContent = readyRetail ? 'Ready now ✅' : `${fmtZAR(rr - pool)} short`;
+  document.getElementById('b-bf-date').textContent      = readyBF ? 'Ready now ✅' : `${fmtZAR(rb - pool)} short`;
 
-  // header runway
-  const pct = Math.min(100, (pool / rr) * 100);
+  // header runway pills — one pill per remaining (not obtained) item
+  const pillsEl = document.getElementById('runway-pills');
   document.getElementById('runway-current').textContent = fmtZAR(pool);
-  document.getElementById('runway-need').textContent    = fmtZAR(rr);
-  const barEl = document.getElementById('runway-bar');
-  barEl.style.width = pct + '%';
-  barEl.style.background = pct >= 100
-    ? 'linear-gradient(90deg,#7d8f52,#8a9a5b)'
-    : pct >= 60
-    ? 'linear-gradient(90deg,#c9773b,#d4a24e)'
-    : 'linear-gradient(90deg,#b5652f,#d9a66c)';
+
+  if (pillsEl) {
+    const items = remaining();
+    let runningPool = pool;
+    pillsEl.innerHTML = items.map(item => {
+      const price = item.retailZAR;
+      const funded = Math.min(1, Math.max(0, runningPool / price));
+      const isFunded = runningPool >= price;
+      runningPool -= price; // simulate spending down the pool across pills in order
+      const pct = Math.round(funded * 100);
+      const color = isFunded ? 'linear-gradient(90deg,#4a5c30,#7d8f52)' : 'linear-gradient(90deg,#5a3a1e,#b5652f)';
+      return `
+      <div class="runway-pill ${isFunded ? 'funded' : ''}">
+        <div class="runway-pill-fill" style="width:${pct}%;background:${color};opacity:0.35"></div>
+        <div class="runway-pill-content">
+          <div class="runway-pill-label">${item.category || item.name.split(' ')[0]}</div>
+          <div class="runway-pill-price">${fmtZAR(price)}${isFunded ? ' ✓' : ` (${pct}%)`}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    if (items.length === 0) {
+      pillsEl.innerHTML = `<div style="font-size:11px;color:var(--muted);padding:8px">All parts obtained — build complete! 🎉</div>`;
+    }
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -964,39 +963,6 @@ function renderHeader() {
   const all = allActive();
   const obt = obtained();
   document.getElementById('stat-parts').innerHTML = `${obt.length}<span>/${all.length}</span>`;
-}
-
-// ═══════════════════════════════════════════
-//  Timeline
-// ═══════════════════════════════════════════
-function renderTimeline() {
-  const F = state.financial;
-  const rr = remainRetail();
-  const rb = remainBF();
-  const months = [
-    [6,2026],[7,2026],[8,2026],[9,2026],[10,2026],
-    [11,2026],[12,2026],[1,2027]
-  ];
-  const el = document.getElementById('timeline');
-  el.innerHTML = months.map(([m, y]) => {
-    const s = savingsAt(m, y);
-    const pct = Math.min(100, (s / rr) * 100);
-    const canRetail = s >= rr;
-    const canBF = s >= rb;
-    const isBF = m === F.bfMonth && y === F.bfYear;
-    const isNow = m === NOW_M && y === NOW_Y;
-    const color = canRetail ? '#7d8f52' : canBF ? '#c9773b' : '#b5652f';
-    const labelColor = isNow ? '#d9a66c' : isBF ? '#c9773b' : '#8a7860';
-    const marker = isBF ? '🔥' : isNow ? '▶' : '';
-    const label = `${MONTHS[m]}${y !== 2026 ? ' 27' : ''}`;
-    return `
-    <div class="trow">
-      <div class="trow-label" style="color:${labelColor};font-weight:${isNow||isBF?'700':'400'}">${label}</div>
-      <div class="trow-track"><div class="trow-fill" style="width:${pct}%;background:${color}"></div></div>
-      <div class="trow-amount" style="color:${color}">${fmtZAR(s)}</div>
-      <div class="trow-marker">${marker}</div>
-    </div>`;
-  }).join('');
 }
 
 // ═══════════════════════════════════════════
@@ -1300,7 +1266,6 @@ function render() {
   renderComponents();
   renderBudget();
   renderHeader();
-  renderTimeline();
   renderGames();
   renderSavings();
 }

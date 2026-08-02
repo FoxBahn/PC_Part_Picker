@@ -5,29 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Project AM5 — ZA PC Build Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #080c14;
-    --surface:   #0d1220;
-    --surface2:  #111827;
-    --border:    #1e2d3d;
-    --border2:   #243040;
-    --text:      #e2e8f0;
-    --muted:     #4a5568;
-    --dim:       #2d3748;
-    --cyan:      #22d3ee;
-    --green:     #10b981;
-    --green-dim: #052e16;
-    --amber:     #f59e0b;
-    --amber-dim: #1c1200;
-    --blue:      #3b82f6;
-    --blue-dim:  #0f1e3d;
-    --rose:      #f43f5e;
+    --bg:        #14100c;
+    --surface:   #1c1611;
+    --surface2:  #241d16;
+    --border:    #3a2f22;
+    --border2:   #4a3c2b;
+    --text:      #ecdfc8;
+    --muted:     #8a7860;
+    --dim:       #4a3c2b;
+    --cyan:      #d4a24e;
+    --green:     #8a9a5b;
+    --green-dim: #232416;
+    --amber:     #c9773b;
+    --amber-dim: #2a1c10;
+    --blue:      #b5652f;
+    --blue-dim:  #2a1c10;
+    --rose:      #b0503c;
     --mono:      'Space Mono', monospace;
-    --sans:      'Space Grotesk', system-ui, sans-serif;
+    --sans:      'Fraunces', Georgia, serif;
   }
 
   body {
@@ -46,7 +46,7 @@
   .header { margin-bottom: 36px; }
   .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.25em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-  .title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(100deg, #f8fafc 0%, #64748b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(100deg, #ecdfc8 0%, #8a7860 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .subtitle { font-size: 12px; color: var(--muted); margin-top: 4px; }
   .header-stat { text-align: right; }
   .stat-big { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--text); }
@@ -68,7 +68,7 @@
     padding: 12px 14px; cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: left; width: 100%;
   }
   .option-card.active { border-color: var(--blue); background: var(--blue-dim); }
-  .option-card.owned { border-color: #166534; background: var(--green-dim); }
+  .option-card.owned { border-color: #4a5c30; background: var(--green-dim); }
   .option-card-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
   .option-card-note { font-size: 10px; color: var(--muted); line-height: 1.4; }
   .option-card-price { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--green); margin-top: 5px; }
@@ -117,7 +117,7 @@
     padding: 13px 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface);
     transition: border-color 0.2s, background 0.2s;
   }
-  .comp-row.owned { background: var(--green-dim); border-color: #166534; }
+  .comp-row.owned { background: var(--green-dim); border-color: #4a5c30; }
 
   .check-btn {
     width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--dim);
@@ -131,14 +131,14 @@
   .comp-info { min-width: 0; }
   .comp-cat { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
   .comp-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
-  .comp-row.owned .comp-name { color: #86efac; }
+  .comp-row.owned .comp-name { color: #a8b87a; }
   .comp-note { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .comp-link { font-size: 10px; color: var(--blue); text-decoration: none; display: inline-block; margin-top: 2px; }
   .comp-link:hover { text-decoration: underline; }
 
   .comp-price-block { text-align: right; flex-shrink: 0; }
   .comp-price { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; }
-  .comp-row.owned .comp-price { color: #6ee7b7; cursor: default; }
+  .comp-row.owned .comp-price { color: #9cae72; cursor: default; }
   .comp-saving { font-family: var(--mono); font-size: 10px; color: var(--green); }
   .comp-owned-label { font-size: 10px; font-weight: 700; color: var(--green); }
   .price-input {
@@ -195,11 +195,11 @@
   }
   .savings-log-month { font-weight: 600; color: var(--text); }
   .savings-log-note { font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .savings-log-amount { font-family: var(--mono); font-weight: 700; color: #34d399; }
+  .savings-log-amount { font-family: var(--mono); font-weight: 700; color: #8a9a5b; }
   .savings-log-del { background: none; border: none; color: var(--dim); font-size: 14px; cursor: pointer; margin-left: 10px; }
-  .savings-log-del:hover { color: #f43f5e; }
-  .savings-status-good { color: #10b981; }
-  .savings-status-bad { color: #f43f5e; }
+  .savings-log-del:hover { color: #b0503c; }
+  .savings-status-good { color: #7d8f52; }
+  .savings-status-bad { color: #b0503c; }
 
   /* ── Game Library ── */
   .game-filters { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
@@ -207,14 +207,14 @@
     font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 20px; cursor: pointer;
     border: 1px solid var(--border2); background: transparent; color: var(--muted); transition: all 0.2s;
   }
-  .game-filter-btn.active { border-color: var(--blue); background: var(--blue-dim); color: #60a5fa; }
+  .game-filter-btn.active { border-color: var(--blue); background: var(--blue-dim); color: #d9a66c; }
   .game-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
   .game-row {
     display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: center;
     padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface);
     transition: border-color 0.2s, background 0.2s;
   }
-  .game-row.owned { background: var(--green-dim); border-color: #166534; }
+  .game-row.owned { background: var(--green-dim); border-color: #4a5c30; }
   .game-check {
     width: 20px; height: 20px; border-radius: 5px; border: 1px solid var(--dim);
     background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -223,20 +223,20 @@
   .game-check.checked { background: var(--green); border-color: var(--green); }
   .game-info { min-width: 0; }
   .game-name { font-size: 13px; font-weight: 600; color: var(--text); }
-  .game-row.owned .game-name { color: #86efac; }
+  .game-row.owned .game-name { color: #a8b87a; }
   .game-tags { display: flex; gap: 5px; margin-top: 4px; flex-wrap: wrap; }
   .game-tag { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .game-tag.rt { background: #1c1200; color: #f59e0b; }
-  .game-tag.fsr { background: #052e16; color: #34d399; }
-  .game-tag.amd-fit { background: #0f2d1a; color: #10b981; }
+  .game-tag.rt { background: #2a1c10; color: #c9773b; }
+  .game-tag.fsr { background: #232416; color: #8a9a5b; }
+  .game-tag.amd-fit { background: #232416; color: #7d8f52; }
   .game-perf { text-align: right; flex-shrink: 0; display: flex; gap: 14px; }
   .game-perf-col { text-align: right; min-width: 68px; }
   .game-perf-label { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
   .game-perf-fps { font-family: var(--mono); font-size: 15px; font-weight: 700; }
-  .game-perf-fps.great { color: #10b981; }
-  .game-perf-fps.good { color: #60a5fa; }
-  .game-perf-fps.ok { color: #f59e0b; }
-  .game-perf-fps.poor { color: #f43f5e; }
+  .game-perf-fps.great { color: #7d8f52; }
+  .game-perf-fps.good { color: #d9a66c; }
+  .game-perf-fps.ok { color: #c9773b; }
+  .game-perf-fps.poor { color: #b0503c; }
   .game-summary-bar {
     display: flex; justify-content: space-between; align-items: center;
     background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
@@ -628,20 +628,20 @@
     <div class="card">
       <div class="card-title">Budget Engine</div>
       <div class="budget-rows">
-        <div class="brow"><span class="brow-label">Already spent</span><span class="brow-val" id="b-spent" style="color:#60a5fa">R0</span></div>
-        <div class="brow"><span class="brow-label">Remaining (retail)</span><span class="brow-val" id="b-remain" style="color:#f8fafc">R0</span></div>
-        <div class="brow"><span class="brow-label">Remaining (BF est.)</span><span class="brow-val" id="b-bf" style="color:#f59e0b">R0</span></div>
+        <div class="brow"><span class="brow-label">Already spent</span><span class="brow-val" id="b-spent" style="color:#d9a66c">R0</span></div>
+        <div class="brow"><span class="brow-label">Remaining (retail)</span><span class="brow-val" id="b-remain" style="color:#ecdfc8">R0</span></div>
+        <div class="brow"><span class="brow-label">Remaining (BF est.)</span><span class="brow-val" id="b-bf" style="color:#c9773b">R0</span></div>
         <hr class="divider">
-        <div class="brow"><span class="brow-label">Current savings pool</span><span class="brow-val" id="b-pool" style="color:#34d399">R0</span></div>
+        <div class="brow"><span class="brow-label">Current savings pool</span><span class="brow-val" id="b-pool" style="color:#8a9a5b">R0</span></div>
         <div class="brow"><span class="brow-label">BF pool (Nov 2026)</span><span class="brow-val" id="b-bfpool">R0</span></div>
         <hr class="divider">
         <div class="ready-row">
           <div class="ready-label">Full retail — can buy</div>
-          <div class="ready-date" id="b-retail-date" style="color:#60a5fa">—</div>
+          <div class="ready-date" id="b-retail-date" style="color:#d9a66c">—</div>
         </div>
         <div class="ready-row" style="margin-top:10px">
           <div class="ready-label">BF pricing — can buy</div>
-          <div class="ready-date" id="b-bf-date" style="color:#f59e0b">—</div>
+          <div class="ready-date" id="b-bf-date" style="color:#c9773b">—</div>
         </div>
       </div>
     </div>
@@ -650,9 +650,9 @@
       <div class="card-title">Savings Timeline</div>
       <div class="timeline-rows" id="timeline"></div>
       <div class="legend">
-        <span style="color:#3b82f6">▬ saving</span>
-        <span style="color:#f59e0b">▬ BF ready</span>
-        <span style="color:#10b981">▬ retail ready</span>
+        <span style="color:#b5652f">▬ saving</span>
+        <span style="color:#c9773b">▬ BF ready</span>
+        <span style="color:#7d8f52">▬ retail ready</span>
       </div>
     </div>
 
@@ -678,7 +678,7 @@
 <div id="savings-summary"></div>
 <div id="savings-log"></div>
 <div style="margin-top:10px">
-  <button class="bf-toggle" onclick="logMonthlyContribution()" style="width:100%;padding:12px;border-color:var(--green);color:#34d399">+ Log this month's R5,000 (25th)</button>
+  <button class="bf-toggle" onclick="logMonthlyContribution()" style="width:100%;padding:12px;border-color:var(--green);color:#8a9a5b">+ Log this month's R5,000 (25th)</button>
 </div>
 
 <!-- ══ GAME LIBRARY & PERFORMANCE ══ -->
@@ -780,13 +780,13 @@ function renderOptionGrid(elId, options, activeId, selectFn) {
     ).join(' ');
     const owned = !!opt.obtained;
     const badgeLabel = owned ? '✅ OWNED' : (active ? '✓ SELECTED' : 'OPTION');
-    const badgeColor = owned ? '#34d399' : (active ? 'var(--cyan)' : 'var(--muted)');
+    const badgeColor = owned ? '#8a9a5b' : (active ? 'var(--cyan)' : 'var(--muted)');
     return `
     <button class="option-card ${active ? 'active' : ''} ${owned ? 'owned' : ''}" onclick="${selectFn}('${opt.id}')">
       <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:${badgeColor};margin-bottom:4px">${badgeLabel}</div>
-      <div class="option-card-name" style="color:${owned ? '#86efac' : 'var(--text)'}">${opt.name}</div>
+      <div class="option-card-name" style="color:${owned ? '#a8b87a' : 'var(--text)'}">${opt.name}</div>
       <div class="option-card-note">${opt.note}</div>
-      <div class="option-card-price" style="color:${owned ? '#6ee7b7' : 'var(--green)'}">${fmtZAR(opt.retailZAR)}</div>
+      <div class="option-card-price" style="color:${owned ? '#9cae72' : 'var(--green)'}">${fmtZAR(opt.retailZAR)}</div>
       <div class="option-card-bf">BF est: ${fmtZAR(bf)}</div>
       <div class="option-card-links">${linksHtml}</div>
     </button>`;
@@ -882,7 +882,7 @@ function renderComponents() {
       ? `<input class="price-input" id="edit-${c.id}" type="number" value="${c.retailZAR}"
            onblur="commitEdit('${c.id}')" onkeydown="if(event.key==='Enter')commitEdit('${c.id}')">`
       : `<div class="comp-price" onclick="${(!isOwned && !isSelector) ? `startEdit('${c.id}')` : ''}"
-              style="color:${isOwned ? '#6ee7b7' : isSelector ? 'var(--cyan)' : 'var(--text)'};cursor:${(!isOwned && !isSelector) ? 'pointer' : 'default'}"
+              style="color:${isOwned ? '#9cae72' : isSelector ? 'var(--cyan)' : 'var(--text)'};cursor:${(!isOwned && !isSelector) ? 'pointer' : 'default'}"
               title="${(!isOwned && !isSelector) ? 'Click to update price' : ''}">${fmtZAR(price)}</div>`;
 
     const savingHtml = state.showBF && !isOwned ? `<div class="comp-saving">−${fmtZAR(saving)}</div>` : '';
@@ -903,7 +903,7 @@ function renderComponents() {
       <div class="comp-icon">${c.icon}</div>
       <div class="comp-info">
         <div class="comp-cat">${c.category}</div>
-        <div class="comp-name" style="color:${isOwned ? '#86efac' : isSelector ? '#e2e8f0' : 'var(--text)'}">${c.name}</div>
+        <div class="comp-name" style="color:${isOwned ? '#a8b87a' : isSelector ? '#ecdfc8' : 'var(--text)'}">${c.name}</div>
         <div class="comp-note">${c.note || ''}</div>
         ${linkHtml}
       </div>
@@ -937,7 +937,7 @@ function renderBudget() {
   document.getElementById('b-bf').textContent      = fmtZAR(rb);
   document.getElementById('b-pool').textContent    = fmtZAR(pool);
   document.getElementById('b-bfpool').textContent  = fmtZAR(bfPool);
-  document.getElementById('b-bfpool').style.color  = canBF ? '#10b981' : '#f59e0b';
+  document.getElementById('b-bfpool').style.color  = canBF ? '#7d8f52' : '#c9773b';
 
   const retailAt = affordableMonth(rr);
   const bfAt = affordableMonth(rb);
@@ -951,10 +951,10 @@ function renderBudget() {
   const barEl = document.getElementById('runway-bar');
   barEl.style.width = pct + '%';
   barEl.style.background = pct >= 100
-    ? 'linear-gradient(90deg,#10b981,#34d399)'
+    ? 'linear-gradient(90deg,#7d8f52,#8a9a5b)'
     : pct >= 60
-    ? 'linear-gradient(90deg,#f59e0b,#fbbf24)'
-    : 'linear-gradient(90deg,#3b82f6,#60a5fa)';
+    ? 'linear-gradient(90deg,#c9773b,#d4a24e)'
+    : 'linear-gradient(90deg,#b5652f,#d9a66c)';
 }
 
 // ═══════════════════════════════════════════
@@ -985,8 +985,8 @@ function renderTimeline() {
     const canBF = s >= rb;
     const isBF = m === F.bfMonth && y === F.bfYear;
     const isNow = m === NOW_M && y === NOW_Y;
-    const color = canRetail ? '#10b981' : canBF ? '#f59e0b' : '#3b82f6';
-    const labelColor = isNow ? '#60a5fa' : isBF ? '#f59e0b' : '#4a5568';
+    const color = canRetail ? '#7d8f52' : canBF ? '#c9773b' : '#b5652f';
+    const labelColor = isNow ? '#d9a66c' : isBF ? '#c9773b' : '#8a7860';
     const marker = isBF ? '🔥' : isNow ? '▶' : '';
     const label = `${MONTHS[m]}${y !== 2026 ? ' 27' : ''}`;
     return `
@@ -1219,24 +1219,24 @@ function renderSavings() {
     <div class="savings-summary-card">
       <div class="savings-row">
         <span class="savings-row-label">Starting pool (as of ${F.asOfDate || 'Jun 2026'})</span>
-        <span class="savings-row-val" style="color:#60a5fa">${fmtZAR(F.startPool)}</span>
+        <span class="savings-row-val" style="color:#d9a66c">${fmtZAR(F.startPool)}</span>
       </div>
       <div class="savings-row">
         <span class="savings-row-label">Logged contributions (${F.savingsLog.length} month${F.savingsLog.length===1?'':'s'})</span>
-        <span class="savings-row-val" style="color:#34d399">+${fmtZAR(F.savingsLog.reduce((s,e)=>s+e.amount,0))}</span>
+        <span class="savings-row-val" style="color:#8a9a5b">+${fmtZAR(F.savingsLog.reduce((s,e)=>s+e.amount,0))}</span>
       </div>
       <div class="savings-row">
         <span class="savings-row-label"><strong>Current savings pool</strong></span>
-        <span class="savings-row-val" style="color:#f8fafc;font-size:17px">${fmtZAR(pool)}</span>
+        <span class="savings-row-val" style="color:#ecdfc8;font-size:17px">${fmtZAR(pool)}</span>
       </div>
       <hr class="divider">
       <div class="savings-row">
         <span class="savings-row-label">Remaining parts — full retail</span>
-        <span class="savings-row-val" style="color:#f8fafc">${fmtZAR(rRetail)}</span>
+        <span class="savings-row-val" style="color:#ecdfc8">${fmtZAR(rRetail)}</span>
       </div>
       <div class="savings-row">
         <span class="savings-row-label">Remaining parts — BF estimate</span>
-        <span class="savings-row-val" style="color:#f59e0b">${fmtZAR(rBF)}</span>
+        <span class="savings-row-val" style="color:#c9773b">${fmtZAR(rBF)}</span>
       </div>
       <hr class="divider">
       <div class="savings-row">

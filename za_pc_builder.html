@@ -367,30 +367,6 @@
       "link": "https://www.wootware.co.za/id-cooling-tf-12025-argb-trio-tf120-120mm-argb-case-fan-3-pack.html"
     },
     {
-      "id": "cpu",
-      "category": "Processor",
-      "icon": "⚡",
-      "name": "AMD Ryzen 5 9600X",
-      "retailZAR": 4449,
-      "bfDiscount": 0.08,
-      "obtained": false,
-      "note": "Zen 5, AM5, 6C/12T · Trusted: Progenix R4,449 (verified reviews) · Alt: Wootware R4,499 · Budget: Distrinode R3,637",
-      "link": "https://progenix.co.za/AMD-Ryzen-5-9600X-6-Core-CPU-No-Cooler-Unlocked-Multiplier-Socket-AM5-3-9GHz-5-4GHz-Boost",
-      "link2": "https://www.wootware.co.za/amd-100-100001405wof-ryzen-5-9600x-5-40ghz-6-core-zen-5-socket-am5-desktop-cpu-cooler-not-included.html",
-      "link2label": "Alt: Wootware R4,499"
-    },
-    {
-      "id": "ram",
-      "category": "Memory",
-      "icon": "💾",
-      "name": "Patriot Viper Venom RGB 32GB DDR5-6000 CL30",
-      "retailZAR": 8435,
-      "bfDiscount": 0.18,
-      "obtained": false,
-      "note": "DDR5-6000 CL30 · 1:1 FCLK ratio · Alt (no RGB): Patriot PVV R8,070 · Alt (XPG): Lancer Blade R8,899",
-      "link": "https://distrinode.co.za/ddr5-32gb-2x16gb-6000mt-s-gaming-ram-patriot-klevv-cras-v-with-heatsink-cl30-1-35v-xmp-3-0-rgb-pvvr532g600c30k"
-    },
-    {
       "id": "ssd",
       "category": "Storage",
       "icon": "💿",
@@ -402,17 +378,6 @@
       "link": "https://www.evetech.co.za/acer-predator-gm7000-2tb-nvme-ssd/best-deal/16831",
       "link2": "https://distrinode.co.za/western-digital-1tb-wd-blue-sn5100-nvme-ssd-wds100t5b0e",
       "link2label": "Budget alt: Distrinode WD SN5100 R3,237"
-    },
-    {
-      "id": "psu",
-      "category": "Power Supply",
-      "icon": "🔌",
-      "name": "Deepcool GamerStorm PQ850G 850W ATX 3.1",
-      "retailZAR": 1749,
-      "bfDiscount": 0.12,
-      "obtained": true,
-      "note": "850W · Cybenetics Platinum · 2125W transient · Zero RPM · 10yr warranty · Covers 9070 XT + 5070 Ti",
-      "link": "https://www.wootware.co.za/gamerstorm-pq850g-850w-cybenetics-platinum-fully-modular-black-pcie-5-1-atx-3-1-desktop-power-supply.html"
     },
     {
       "id": "case",
@@ -565,6 +530,92 @@
     }
   ],
   "activeRamId": "ram-patriot-rgb",
+  "cpuOptions": [
+    {
+      "id": "cpu-9600x",
+      "name": "AMD Ryzen 5 9600X",
+      "retailZAR": 4449,
+      "bfDiscount": 0.08,
+      "note": "⭐ Current pick · Zen 5, 6C/12T, 5.4GHz · Best single-thread of the lineup, ideal for GIS + gaming at your 4K/1440p targets · Baseline — everything below is measured against this chip · Trusted: Progenix R4,449 · Budget: Distrinode R3,637",
+      "links": [
+        { "label": "Progenix", "url": "https://progenix.co.za/AMD-Ryzen-5-9600X-6-Core-CPU-No-Cooler-Unlocked-Multiplier-Socket-AM5-3-9GHz-5-4GHz-Boost" },
+        { "label": "Wootware", "url": "https://www.wootware.co.za/amd-100-100001405wof-ryzen-5-9600x-5-40ghz-6-core-zen-5-socket-am5-desktop-cpu-cooler-not-included.html" },
+        { "label": "Budget: Distrinode", "url": "https://distrinode.co.za/processor-amd-ryzen-5-9600x-3-9-ghz-6-cores-38-mb-cache-socket-am5-100-100001405wof" }
+      ]
+    },
+    {
+      "id": "cpu-9600",
+      "name": "AMD Ryzen 5 9600 (non-X)",
+      "retailZAR": 3492,
+      "bfDiscount": 0.08,
+      "note": "Zen 5, 6C/12T, 5.2GHz (200MHz lower boost than 9600X) · Real-world: within margin of error of the 9600X in every game and workload — genuinely negligible difference · Saves ~R957 vs 9600X for essentially identical performance",
+      "links": [
+        { "label": "Progenix (check current)", "url": "https://progenix.co.za/AMD-Ryzen-5-9600X-6-Core-CPU-No-Cooler-Unlocked-Multiplier-Socket-AM5-3-9GHz-5-4GHz-Boost" }
+      ]
+    },
+    {
+      "id": "cpu-7600x",
+      "name": "AMD Ryzen 5 7600X",
+      "retailZAR": 3762,
+      "bfDiscount": 0.08,
+      "note": "Zen 4 (prev-gen), 6C/12T, 5.4GHz · ~5% lower IPC than 9600X but same core count and clock · You'd feel almost nothing different day to day · Only worth it if priced meaningfully below the 9600X",
+      "links": [
+        { "label": "Distrinode", "url": "https://distrinode.co.za/" }
+      ]
+    },
+    {
+      "id": "cpu-7700x",
+      "name": "AMD Ryzen 7 7700X",
+      "retailZAR": 3800,
+      "bfDiscount": 0.08,
+      "note": "💰 Best value upgrade · Zen 4, 8C/16T, 5.4GHz · Gaming: identical to 9600X at your 4K/1440p targets (GPU-bound) · Productivity: ~29% faster multi-core (GIS batch jobs, LLM CPU work, multitasking) · Only ~R650 more than Progenix 9600X for 2 extra cores — best £/core in the lineup",
+      "links": [
+        { "label": "Distrinode (verify stock)", "url": "https://distrinode.co.za/" },
+        { "label": "Wootware", "url": "https://www.wootware.co.za/amd-100-100000591wof-ryzen-7-7700x-5-40ghz-8-core-zen-4-socket-am5-desktop-cpu.html" }
+      ]
+    },
+    {
+      "id": "cpu-9700x",
+      "name": "AMD Ryzen 7 9700X",
+      "retailZAR": 4909,
+      "bfDiscount": 0.08,
+      "note": "Zen 5, 8C/16T, 5.5GHz · Gaming: identical to 9600X at 4K/1440p (GPU-bound) · Productivity: ~29% faster multi-core than 9600X, slightly ahead of 7700X on single-thread (Zen 5 IPC) · The 'do everything a bit better' chip, but 7700X gets you 90% of this for R1,100 less",
+      "links": [
+        { "label": "Distrinode", "url": "https://distrinode.co.za/" }
+      ]
+    },
+    {
+      "id": "cpu-7500x3d",
+      "name": "AMD Ryzen 5 7500X3D",
+      "retailZAR": 4707,
+      "bfDiscount": 0.05,
+      "note": "⚠ Not recommended for your setup · Zen 4, 6C/12T, only 4.0-4.5GHz boost + 96MB 3D V-Cache · Gaming: ~5-10% faster than 9600X ONLY at 1080p/1440p — gap collapses to near-zero at 4K where you're GPU-bound · Productivity: genuinely the slowest chip in this list for GIS/LLM work due to low clock speed · Cache advantage wasted on your resolution targets",
+      "links": [
+        { "label": "FirstShop", "url": "https://www.firstshop.co.za/products/amd-ryzen-5-7500x3d-cpu-amd-ryzen-5-6-core-4ghz-socket-am5-processor-100-100001904wof-376437" }
+      ]
+    },
+    {
+      "id": "cpu-9800x3d",
+      "name": "AMD Ryzen 7 9800X3D",
+      "retailZAR": 8173,
+      "bfDiscount": 0.05,
+      "note": "🎮 Best gaming CPU on the market · Zen 5, 8C/16T, 5.2GHz + 96MB 3D V-Cache · Gaming: best-in-class frametimes at 1440p high-refresh — but at your 4K/60 TV target the GPU bottleneck erases most of the advantage · Productivity: solid 8-core throughput, though slightly behind 9700X on raw multi-thread due to lower clocks · The splurge pick if you ever add a 240Hz 1440p monitor",
+      "links": [
+        { "label": "Distrinode", "url": "https://distrinode.co.za/" }
+      ]
+    },
+    {
+      "id": "cpu-9950x",
+      "name": "AMD Ryzen 9 9950X",
+      "retailZAR": 8339,
+      "bfDiscount": 0.05,
+      "note": "🖥 Workstation pick · Zen 5, 16C/32T, 5.7GHz · Gaming: no better than 9600X at your resolutions (GPU-bound), no 3D V-Cache so not gaming-optimised · Productivity: the strongest chip here for heavy GIS batch processing, CPU-side LLM inference, or serious multitasking — only worth it if that work becomes regular, not occasional",
+      "links": [
+        { "label": "Distrinode", "url": "https://distrinode.co.za/" }
+      ]
+    }
+  ],
+  "activeCpuId": "cpu-9600x",
   "games": [
     { "id": "g-mhwilds", "name": "Monster Hunter Wilds", "owned": false, "want": true, "rt": false, "fsr": true, "amdFit": true, "gpuTier4k": 1.0, "gpuTier1440": 1.0, "cpuSensitive": false },
     { "id": "g-mhrise", "name": "Monster Hunter Rise", "owned": true, "want": false, "rt": false, "fsr": true, "amdFit": true, "gpuTier4k": 2.2, "gpuTier1440": 2.4, "cpuSensitive": false },
@@ -624,7 +675,13 @@
 <div class="section-label">Target GPU — select one</div>
 <div class="gpu-grid" id="gpu-grid"></div>
 
-<div class="section-label" style="margin-top:4px">Power Supply — select one</div>
+<div class="section-label" style="margin-top:4px">Processor — select one</div>
+<p style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">
+  Notes explain the real-world difference vs the 9600X baseline for gaming and productivity.
+</p>
+<div class="option-grid two-col" id="cpu-grid"></div>
+
+<div class="section-label" style="margin-top:16px">Power Supply — select one</div>
 <div class="option-grid" id="psu-grid"></div>
 
 <div class="section-label">Memory — select one</div>
@@ -716,6 +773,8 @@ let state = {
   activePsuId: RAW.activePsuId,
   ramOptions:  RAW.ramOptions.map(r => ({...r})),
   activeRamId: RAW.activeRamId,
+  cpuOptions:  RAW.cpuOptions.map(c => ({...c})),
+  activeCpuId: RAW.activeCpuId,
   financial:   RAW.financial,
   showBF:      false,
   editingId:   null,
@@ -737,10 +796,11 @@ function fmtZAR(n) { return 'R' + Math.round(n).toLocaleString('en-ZA'); }
 function getGPU()       { return state.gpuOptions.find(g => g.id === state.activeGpuId); }
 function getPSU()       { return state.psuOptions.find(p => p.id === state.activePsuId); }
 function getRAM()       { return state.ramOptions.find(r => r.id === state.activeRamId); }
+function getCPU()       { return state.cpuOptions.find(c => c.id === state.activeCpuId); }
 function allActive() {
-  // Use selected PSU and RAM instead of component list entries
-  const base = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram');
-  return [...base, getPSU(), getRAM(), getGPU()].filter(Boolean);
+  // Use selected PSU, RAM, CPU instead of component list entries
+  const base = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram' && c.id !== 'cpu');
+  return [...base, getPSU(), getRAM(), getCPU(), getGPU()].filter(Boolean);
 }
 function obtained()     { return allActive().filter(c => c.obtained); }
 function remaining()    { return allActive().filter(c => !c.obtained); }
@@ -778,6 +838,7 @@ function renderOptionGrid(elId, options, activeId, selectFn) {
 
 function renderPSUs() { renderOptionGrid('psu-grid', state.psuOptions, state.activePsuId, 'selectPSU'); }
 function renderRAMs() { renderOptionGrid('ram-grid', state.ramOptions, state.activeRamId, 'selectRAM'); }
+function renderCPUs() { renderOptionGrid('cpu-grid', state.cpuOptions, state.activeCpuId, 'selectCPU'); }
 
 function renderGPUs() {
   const el = document.getElementById('gpu-grid');
@@ -814,12 +875,13 @@ function renderComponents() {
   // Build display list: fixed components (excl psu/ram) + selected PSU + selected RAM + selected GPU
   const psu = getPSU();
   const ram = getRAM();
+  const cpu = getCPU();
   const gpu = getGPU();
 
-  // Fixed components excluding psu and ram (those are driven by selectors)
-  const fixedComps = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram');
+  // Fixed components excluding psu, ram, cpu (those are driven by selectors)
+  const fixedComps = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram' && c.id !== 'cpu');
 
-  // Build synthetic entries for PSU, RAM, GPU from selectors
+  // Build synthetic entries for PSU, RAM, CPU, GPU from selectors
   function selectorEntry(opt, category, icon, toggleId) {
     return {
       ...opt,
@@ -833,6 +895,7 @@ function renderComponents() {
 
   const displayList = [
     ...fixedComps,
+    cpu ? selectorEntry(cpu, 'Processor', '⚡', 'cpu') : null,
     psu ? selectorEntry(psu, 'Power Supply', '🔌', 'psu') : null,
     ram ? selectorEntry(ram, 'Memory', '💾', 'ram') : null,
     gpu ? selectorEntry(gpu, 'Graphics Card', '🎮', 'gpu') : null,
@@ -985,6 +1048,11 @@ function selectRAM(id) {
   render();
 }
 
+function selectCPU(id) {
+  state.activeCpuId = id;
+  render();
+}
+
 function toggleBF() {
   state.showBF = !state.showBF;
   const btn = document.getElementById('bf-toggle');
@@ -1039,12 +1107,14 @@ const GPU_BASELINE_FPS = {
 // fixed single component (not a selector like GPU/PSU/RAM), this reads
 // from the CPU component's name to detect upgrades if ever changed.
 function getCpuMultiplier() {
-  const cpu = state.components.find(c => c.id === 'cpu');
+  const cpu = getCPU();
   if (!cpu) return 1.0;
   const name = cpu.name.toLowerCase();
+  if (name.includes('9800x3d')) return 1.10;
+  if (name.includes('7500x3d')) return 0.94; // low clock hurts CPU-sensitive titles
+  if (name.includes('9950x')) return 1.09;
   if (name.includes('9700x') || name.includes('7700x')) return 1.06;
-  if (name.includes('x3d')) return 1.10;
-  if (name.includes('9950x')) return 1.08;
+  if (name.includes('7600x') || name.includes('9600') && !name.includes('9600x')) return 0.99;
   return 1.0; // 9600X baseline
 }
 
@@ -1096,7 +1166,7 @@ function renderGames() {
   listEl.innerHTML = `
     <div class="game-summary-bar">
       <span>Library: <b>${ownedCount}</b> owned · <b>${wantCount}</b> on wishlist · <b>${state.games.length}</b> tracked</span>
-      <span>GPU: <b>${gpu.name.split(' ').slice(0,3).join(' ')}</b></span>
+      <span>GPU: <b>${gpu.name.split(' ').slice(0,3).join(' ')}</b> · CPU: <b>${(getCPU()||{}).name || '—'}</b></span>
     </div>
   ` + games.map(g => {
     const cpuBump = g.cpuSensitive ? cpuMult : 1.0;
@@ -1263,6 +1333,7 @@ function removeSavingsEntry(idx) {
 // ═══════════════════════════════════════════
 function render() {
   renderGPUs();
+  renderCPUs();
   renderPSUs();
   renderRAMs();
   renderComponents();

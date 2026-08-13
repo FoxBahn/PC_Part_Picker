@@ -59,15 +59,18 @@
   .runway-labels b { font-family: var(--mono); color: var(--amber); }
   .runway-pills { display: flex; gap: 6px; flex-wrap: wrap; }
   .runway-pill {
-    flex: 1; min-width: 70px; border-radius: 10px; padding: 8px 10px;
-    border: 1px solid var(--border2); position: relative; overflow: hidden;
+    flex: 1 1 calc(50% - 6px); min-width: 78px; border-radius: 10px; padding: 8px 10px;
+    border: 1px solid var(--border2); background: var(--surface2); position: relative; overflow: hidden;
+  }
+  @media (min-width: 480px) {
+    .runway-pill { flex: 1 1 0; }
   }
   .runway-pill-fill {
     position: absolute; inset: 0; z-index: 0; transition: width 0.5s ease;
-    border-radius: 10px 0 0 10px;
+    border-radius: 10px 0 0 10px; opacity: 0.45 !important;
   }
   .runway-pill-content { position: relative; z-index: 1; }
-  .runway-pill-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 2px; }
+  .runway-pill-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .runway-pill-price { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--text); }
   .runway-pill.funded { border-color: #4a5c30; }
   .runway-pill.owned-pill { background: var(--green-dim); border-color: #4a5c30; }
@@ -1326,14 +1329,15 @@ function renderBudget() {
       const funded = Math.min(1, Math.max(0, runningPool / price));
       const isFunded = runningPool >= price;
       runningPool -= price; // simulate spending down the pool across pills in order
-      const pct = Math.round(funded * 100);
+      const pct = Math.max(isFunded ? 100 : 2, Math.round(funded * 100)); // minimum 2% sliver so pill is never invisible
       const color = isFunded ? 'linear-gradient(90deg,#4a5c30,#7d8f52)' : 'linear-gradient(90deg,#5a3a1e,#b5652f)';
+      const label = item.category || (item._isSelector ? item._selectorId.toUpperCase() : item.name.split(' ')[0]);
       return `
       <div class="runway-pill ${isFunded ? 'funded' : ''}">
-        <div class="runway-pill-fill" style="width:${pct}%;background:${color};opacity:0.35"></div>
+        <div class="runway-pill-fill" style="width:${pct}%;background:${color}"></div>
         <div class="runway-pill-content">
-          <div class="runway-pill-label">${item.category || item.name.split(' ')[0]}</div>
-          <div class="runway-pill-price">${fmtZAR(price)}${isFunded ? ' ✓' : ` (${pct}%)`}</div>
+          <div class="runway-pill-label">${label}</div>
+          <div class="runway-pill-price">${fmtZAR(price)}${isFunded ? ' ✓' : ` (${Math.round(funded*100)}%)`}</div>
         </div>
       </div>`;
     }).join('');

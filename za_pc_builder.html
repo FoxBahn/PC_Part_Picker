@@ -247,6 +247,7 @@
   .game-tag.fsr { background: #232416; color: #8a9a5b; }
   .game-tag.amd-fit { background: #232416; color: #7d8f52; }
   .game-tag.cpu-bound { background: #2a1c10; color: #d9a66c; }
+  .game-tag.gpu-bound { background: transparent; color: var(--dim); border: 1px solid var(--border); }
   .game-perf { text-align: right; flex-shrink: 0; display: flex; gap: 14px; }
   .game-perf-col { text-align: right; min-width: 68px; }
   .game-perf-label { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
@@ -383,10 +384,10 @@
       "retailZAR": 6199,
       "bfDiscount": 0.2,
       "obtained": false,
-      "note": "⭐ Trusted: Wootware · 2TB · Dedicated DRAM · 7,400/6,800 MB/s · 1,480 TBW · 11 verified reviews · Budget alt: Acer GM7000 2TB R4,829 (EKD Online)",
+      "note": "⭐ Trusted: Wootware · 2TB · Dedicated DRAM · 7,400/6,800 MB/s · 1,480 TBW · 11 verified reviews · NEW OPTION: Patriot VP4300 Lite 2TB R5,149 (Progenix) — DRAMless but independently tested to saturate Gen4, 1,600 TBW, R1,050 cheaper · Budget alt: Acer GM7000 2TB R4,829 (EKD Online)",
       "link": "https://www.wootware.co.za/adata-agammixs70b-2t-cs-xpg-gammix-s70-blade-2tb-m-2-2280-nvme-pci-e-4-0-solid-state-drive.html",
-      "link2": "https://ekdonline.com/product/acer-predator-gm7000-2tb-gen4-x4-dram-cache-nvme-m-2-2280-solid-state-drive-ssd-heatsink-up-to-7400mb-s-gm7000hs-2tb/",
-      "link2label": "Budget alt: Acer GM7000 2TB R4,829"
+      "link2": "https://progenix.co.za/Progenix-6th-Birthday-Sale/Patriot-VIPER-VP4300-LITE-Gen4x4-M-2-2280-NVMe-SSD-2TB",
+      "link2label": "NEW: Patriot VP4300 Lite R5,149"
     },
     {
       "id": "case",
@@ -1073,7 +1074,7 @@
 <!-- ══ GAME LIBRARY & PERFORMANCE ══ -->
 <div class="section-label" style="margin-top:24px">Game Library &amp; Expected Performance</div>
 <p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
-  Tap a game to mark it as owned. Performance estimates update automatically based on your selected GPU and CPU above.
+  Tap a game to mark it as owned. GPU changes affect every title's fps below. CPU changes only affect titles tagged <strong style="color:#d9a66c">CPU-Bound</strong> — most modern games at 4K/1440p are GPU-bound, so switching CPU intentionally won't move their numbers.
   <em style="color:var(--dim)">Estimates are directional approximations based on comparative benchmarks, not lab-tested figures for this exact build.</em>
 </p>
 <div class="game-filters" id="game-filters"></div>
@@ -1511,7 +1512,7 @@ function renderGames() {
       g.rt ? '<span class="game-tag rt">Ray Tracing</span>' : '',
       g.fsr ? '<span class="game-tag fsr">FSR Redstone</span>' : '',
       g.amdFit ? '<span class="game-tag amd-fit">AMD Optimised</span>' : '',
-      g.cpuSensitive ? '<span class="game-tag cpu-bound">CPU-Bound</span>' : ''
+      g.cpuSensitive ? '<span class="game-tag cpu-bound">CPU-Bound</span>' : '<span class="game-tag gpu-bound">GPU-Bound (CPU has no effect)</span>'
     ].join('');
 
     return `

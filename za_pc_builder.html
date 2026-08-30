@@ -219,6 +219,12 @@
   .savings-status-bad { color: #b0503c; }
 
   /* ── Game Library ── */
+  .os-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+  .os-toggle-btn {
+    flex: 1; font-size: 12px; font-weight: 700; padding: 10px 14px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--border2); background: var(--surface); color: var(--muted); transition: all 0.2s;
+  }
+  .os-toggle-btn.active { border-color: var(--cyan); background: var(--blue-dim); color: #d9a66c; }
   .game-filters { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
   .game-filter-btn {
     font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 20px; cursor: pointer;
@@ -248,6 +254,10 @@
   .game-tag.amd-fit { background: #232416; color: #7d8f52; }
   .game-tag.cpu-bound { background: #2a1c10; color: #d9a66c; }
   .game-tag.gpu-bound { background: transparent; color: var(--dim); border: 1px solid var(--border); }
+  .game-tag.linux-poor { background: #3a1414; color: #e08585; white-space: normal; text-transform: none; letter-spacing: normal; display: block; margin-top: 4px; font-size: 10px; padding: 4px 8px; }
+  .game-tag.linux-caution { background: #2a1c10; color: #d9a66c; white-space: normal; text-transform: none; letter-spacing: normal; display: block; margin-top: 4px; font-size: 10px; padding: 4px 8px; }
+  .game-tag.linux-good { background: #232416; color: #a8b87a; white-space: normal; text-transform: none; letter-spacing: normal; display: block; margin-top: 4px; font-size: 10px; padding: 4px 8px; }
+  .game-tag.linux-unknown { background: transparent; color: var(--dim); border: 1px dashed var(--border); text-transform: none; letter-spacing: normal; display: inline-block; }
   .game-perf { text-align: right; flex-shrink: 0; display: flex; gap: 14px; }
   .game-perf-col { text-align: right; min-width: 68px; }
   .game-perf-label { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
@@ -654,7 +664,10 @@
       "bfDiscount": 0.2,
       "note": "⭐ Trusted: Wootware · Dedicated DRAM · 7,400/6,800 MB/s · 1,480 TBW · 11 verified reviews",
       "links": [
-        { "label": "Wootware", "url": "https://www.wootware.co.za/adata-agammixs70b-2t-cs-xpg-gammix-s70-blade-2tb-m-2-2280-nvme-pci-e-4-0-solid-state-drive.html" }
+        {
+          "label": "Wootware",
+          "url": "https://www.wootware.co.za/adata-agammixs70b-2t-cs-xpg-gammix-s70-blade-2tb-m-2-2280-nvme-pci-e-4-0-solid-state-drive.html"
+        }
       ]
     },
     {
@@ -664,7 +677,10 @@
       "bfDiscount": 0.15,
       "note": "💰 Best value · DRAMless but independently lab-tested to fully saturate Gen4 x4 · 1,600 TBW (higher than XPG) · R1,050 cheaper",
       "links": [
-        { "label": "Progenix (6th Birthday Sale)", "url": "https://progenix.co.za/Progenix-6th-Birthday-Sale/Patriot-VIPER-VP4300-LITE-Gen4x4-M-2-2280-NVMe-SSD-2TB" }
+        {
+          "label": "Progenix (6th Birthday Sale)",
+          "url": "https://progenix.co.za/Progenix-6th-Birthday-Sale/Patriot-VIPER-VP4300-LITE-Gen4x4-M-2-2280-NVMe-SSD-2TB"
+        }
       ]
     },
     {
@@ -674,7 +690,10 @@
       "bfDiscount": 0.2,
       "note": "Budget alt · Dedicated DRAM · 7,400/6,700 MB/s · 1,500 TBW",
       "links": [
-        { "label": "EKD Online", "url": "https://ekdonline.com/product/acer-predator-gm7000-2tb-gen4-x4-dram-cache-nvme-m-2-2280-solid-state-drive-ssd-heatsink-up-to-7400mb-s-gm7000hs-2tb/" }
+        {
+          "label": "EKD Online",
+          "url": "https://ekdonline.com/product/acer-predator-gm7000-2tb-gen4-x4-dram-cache-nvme-m-2-2280-solid-state-drive-ssd-heatsink-up-to-7400mb-s-gm7000hs-2tb/"
+        }
       ]
     }
   ],
@@ -690,7 +709,10 @@
       "amdFit": true,
       "gpuTier4k": 1.0,
       "gpuTier1440": 1.0,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "poor",
+      "linuxPct": 60,
+      "linuxNote": "Confirmed rough: memory leaks, vertex glitches, frame drops from 60→17fps reported even on capable hardware. Not just a Proton tax — the game is unstable on Linux right now."
     },
     {
       "id": "g-mhrise",
@@ -702,7 +724,10 @@
       "amdFit": true,
       "gpuTier4k": 2.2,
       "gpuTier1440": 2.4,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-nomanssky",
@@ -714,7 +739,10 @@
       "amdFit": true,
       "gpuTier4k": 1.6,
       "gpuTier1440": 1.9,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-hades2",
@@ -726,7 +754,10 @@
       "amdFit": true,
       "gpuTier4k": 2.8,
       "gpuTier1440": 3.0,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-planetzoo",
@@ -738,7 +769,10 @@
       "amdFit": true,
       "gpuTier4k": 1.9,
       "gpuTier1440": 2.1,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-ddogma2",
@@ -750,7 +784,10 @@
       "amdFit": true,
       "gpuTier4k": 1.05,
       "gpuTier1440": 1.25,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "ProtonDB page exists but detailed performance reports were not reviewed — check protondb.com before buying."
     },
     {
       "id": "g-horizonfw",
@@ -762,7 +799,10 @@
       "amdFit": true,
       "gpuTier4k": 1.15,
       "gpuTier1440": 1.3,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "caution",
+      "linuxPct": 70,
+      "linuxNote": "Confirmed working on RX 9070 XT + Bazzite specifically, but inconsistent (25-40fps average reported vs 60-70fps via Windows VM passthrough in some setups)."
     },
     {
       "id": "g-elden",
@@ -774,7 +814,10 @@
       "amdFit": true,
       "gpuTier4k": 1.5,
       "gpuTier1440": 1.7,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "caution",
+      "linuxPct": 95,
+      "linuxNote": "Single-player runs fine. Online/co-op has failed after updates due to Easy Anti-Cheat — risk is connectivity, not fps."
     },
     {
       "id": "g-acshadows",
@@ -786,7 +829,10 @@
       "amdFit": true,
       "gpuTier4k": 0.95,
       "gpuTier1440": 1.1,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "caution",
+      "linuxPct": 90,
+      "linuxNote": "Was reported broken, since patched to \"playable again\" via Valve Proton updates. Actively improving — recheck ProtonDB closer to purchase."
     },
     {
       "id": "g-acmirage",
@@ -798,7 +844,10 @@
       "amdFit": true,
       "gpuTier4k": 1.4,
       "gpuTier1440": 1.6,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-acvalhalla",
@@ -810,7 +859,10 @@
       "amdFit": true,
       "gpuTier4k": 1.3,
       "gpuTier1440": 1.5,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-acodyssey",
@@ -822,7 +874,10 @@
       "amdFit": true,
       "gpuTier4k": 1.6,
       "gpuTier1440": 1.8,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-acblackflag",
@@ -834,7 +889,10 @@
       "amdFit": false,
       "gpuTier4k": 1.0,
       "gpuTier1440": 1.15,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-crimsondesert",
@@ -846,7 +904,10 @@
       "amdFit": true,
       "gpuTier4k": 0.85,
       "gpuTier1440": 1.0,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-007firstlight",
@@ -858,7 +919,10 @@
       "amdFit": false,
       "gpuTier4k": 0.9,
       "gpuTier1440": 1.05,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-wolverine",
@@ -870,7 +934,10 @@
       "amdFit": false,
       "gpuTier4k": 0.9,
       "gpuTier1440": 1.05,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-spiderman2",
@@ -882,7 +949,10 @@
       "amdFit": true,
       "gpuTier4k": 1.1,
       "gpuTier1440": 1.3,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-onimusha",
@@ -894,7 +964,10 @@
       "amdFit": true,
       "gpuTier4k": 1.4,
       "gpuTier1440": 1.6,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-daveilguard",
@@ -906,7 +979,10 @@
       "amdFit": true,
       "gpuTier4k": 1.2,
       "gpuTier1440": 1.4,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-witcher3",
@@ -918,7 +994,10 @@
       "amdFit": false,
       "gpuTier4k": 0.9,
       "gpuTier1440": 1.05,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-witcher4",
@@ -930,7 +1009,10 @@
       "amdFit": false,
       "gpuTier4k": 0.85,
       "gpuTier1440": 1.0,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-control",
@@ -942,7 +1024,10 @@
       "amdFit": false,
       "gpuTier4k": 1.3,
       "gpuTier1440": 1.5,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-jedisurvivor",
@@ -954,7 +1039,10 @@
       "amdFit": true,
       "gpuTier4k": 1.1,
       "gpuTier1440": 1.3,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-kcd2",
@@ -966,7 +1054,10 @@
       "amdFit": true,
       "gpuTier4k": 1.2,
       "gpuTier1440": 1.4,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-ghostoftsushima",
@@ -978,7 +1069,10 @@
       "amdFit": true,
       "gpuTier4k": 1.4,
       "gpuTier1440": 1.6,
-      "cpuSensitive": false
+      "cpuSensitive": false,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     },
     {
       "id": "g-oblivionremaster",
@@ -990,7 +1084,10 @@
       "amdFit": true,
       "gpuTier4k": 1.15,
       "gpuTier1440": 1.35,
-      "cpuSensitive": true
+      "cpuSensitive": true,
+      "linuxStatus": "unknown",
+      "linuxPct": null,
+      "linuxNote": "Not yet checked — verify on protondb.com before buying if running Bazzite/Linux."
     }
   ]
 }
@@ -1100,6 +1197,10 @@
   Tap a game to mark it as owned. GPU changes affect every title's fps below. CPU changes only affect titles tagged <strong style="color:#d9a66c">CPU-Bound</strong> — most modern games at 4K/1440p are GPU-bound, so switching CPU intentionally won't move their numbers.
   <em style="color:var(--dim)">Estimates are directional approximations based on comparative benchmarks, not lab-tested figures for this exact build.</em>
 </p>
+<div class="os-toggle" id="os-toggle">
+  <button class="os-toggle-btn active" data-os="windows" onclick="setOsView('windows')">🪟 Windows (native)</button>
+  <button class="os-toggle-btn" data-os="linux" onclick="setOsView('linux')">🐧 Linux (Bazzite/Proton)</button>
+</div>
 <div class="game-filters" id="game-filters"></div>
 <div class="game-list" id="game-list"></div>
 
@@ -1133,7 +1234,8 @@ let state = {
   showBF:      false,
   editingId:   null,
   games:       RAW.games.map(g => ({...g})),
-  gameFilter:  'all'
+  gameFilter:  'all',
+  osView:      'windows'
 };
 
 const MONTHS = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1539,14 +1641,29 @@ function renderGames() {
     </div>
   ` + games.map(g => {
     const cpuBump = g.cpuSensitive ? cpuMult : 1.0;
-    const fps4k = Math.round(baseline.fps4k * g.gpuTier4k * cpuBump);
-    const fps1440 = Math.round(baseline.fps1440 * g.gpuTier1440 * cpuBump);
+    const osMult = (state.osView === 'linux' && g.linuxPct != null) ? (g.linuxPct / 100) : 1.0;
+    const fps4k = Math.round(baseline.fps4k * g.gpuTier4k * cpuBump * osMult);
+    const fps1440 = Math.round(baseline.fps1440 * g.gpuTier1440 * cpuBump * osMult);
+
+    let linuxTagHtml = '';
+    if (state.osView === 'linux') {
+      if (g.linuxStatus === 'poor') {
+        linuxTagHtml = `<span class="game-tag linux-poor">🐧 Rough on Linux — ${g.linuxNote}</span>`;
+      } else if (g.linuxStatus === 'caution') {
+        linuxTagHtml = `<span class="game-tag linux-caution">🐧 Caution — ${g.linuxNote}</span>`;
+      } else if (g.linuxStatus === 'good') {
+        linuxTagHtml = `<span class="game-tag linux-good">🐧 Runs well — ${g.linuxNote}</span>`;
+      } else {
+        linuxTagHtml = `<span class="game-tag linux-unknown">🐧 Not yet checked — verify on ProtonDB</span>`;
+      }
+    }
 
     const tagsHtml = [
       g.rt ? '<span class="game-tag rt">Ray Tracing</span>' : '',
       g.fsr ? '<span class="game-tag fsr">FSR Redstone</span>' : '',
       g.amdFit ? '<span class="game-tag amd-fit">AMD Optimised</span>' : '',
-      g.cpuSensitive ? '<span class="game-tag cpu-bound">CPU-Bound</span>' : '<span class="game-tag gpu-bound">GPU-Bound (CPU has no effect)</span>'
+      g.cpuSensitive ? '<span class="game-tag cpu-bound">CPU-Bound</span>' : '<span class="game-tag gpu-bound">GPU-Bound (CPU has no effect)</span>',
+      linuxTagHtml
     ].join('');
 
     return `
@@ -1572,6 +1689,14 @@ function renderGames() {
 
 function setGameFilter(id) {
   state.gameFilter = id;
+  renderGames();
+}
+
+function setOsView(os) {
+  state.osView = os;
+  document.querySelectorAll('.os-toggle-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.os === os);
+  });
   renderGames();
 }
 

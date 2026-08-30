@@ -377,19 +377,6 @@
       "link": "https://www.wootware.co.za/id-cooling-tf-12025-argb-trio-tf120-120mm-argb-case-fan-3-pack.html"
     },
     {
-      "id": "ssd",
-      "category": "Storage",
-      "icon": "💿",
-      "name": "XPG GAMMIX S70 Blade 2TB NVMe PCIe 4.0",
-      "retailZAR": 6199,
-      "bfDiscount": 0.2,
-      "obtained": false,
-      "note": "⭐ Trusted: Wootware · 2TB · Dedicated DRAM · 7,400/6,800 MB/s · 1,480 TBW · 11 verified reviews · NEW OPTION: Patriot VP4300 Lite 2TB R5,149 (Progenix) — DRAMless but independently tested to saturate Gen4, 1,600 TBW, R1,050 cheaper · Budget alt: Acer GM7000 2TB R4,829 (EKD Online)",
-      "link": "https://www.wootware.co.za/adata-agammixs70b-2t-cs-xpg-gammix-s70-blade-2tb-m-2-2280-nvme-pci-e-4-0-solid-state-drive.html",
-      "link2": "https://progenix.co.za/Progenix-6th-Birthday-Sale/Patriot-VIPER-VP4300-LITE-Gen4x4-M-2-2280-NVMe-SSD-2TB",
-      "link2label": "NEW: Patriot VP4300 Lite R5,149"
-    },
-    {
       "id": "case",
       "category": "Chassis",
       "icon": "📦",
@@ -659,6 +646,39 @@
     }
   ],
   "activeCpuId": "cpu-9600x",
+  "ssdOptions": [
+    {
+      "id": "ssd-xpg-s70",
+      "name": "XPG GAMMIX S70 Blade 2TB NVMe PCIe 4.0",
+      "retailZAR": 6199,
+      "bfDiscount": 0.2,
+      "note": "⭐ Trusted: Wootware · Dedicated DRAM · 7,400/6,800 MB/s · 1,480 TBW · 11 verified reviews",
+      "links": [
+        { "label": "Wootware", "url": "https://www.wootware.co.za/adata-agammixs70b-2t-cs-xpg-gammix-s70-blade-2tb-m-2-2280-nvme-pci-e-4-0-solid-state-drive.html" }
+      ]
+    },
+    {
+      "id": "ssd-patriot-vp4300",
+      "name": "Patriot VIPER VP4300 Lite 2TB NVMe PCIe 4.0",
+      "retailZAR": 5149,
+      "bfDiscount": 0.15,
+      "note": "💰 Best value · DRAMless but independently lab-tested to fully saturate Gen4 x4 · 1,600 TBW (higher than XPG) · R1,050 cheaper",
+      "links": [
+        { "label": "Progenix (6th Birthday Sale)", "url": "https://progenix.co.za/Progenix-6th-Birthday-Sale/Patriot-VIPER-VP4300-LITE-Gen4x4-M-2-2280-NVMe-SSD-2TB" }
+      ]
+    },
+    {
+      "id": "ssd-acer-gm7000",
+      "name": "Acer Predator GM7000 2TB NVMe PCIe 4.0",
+      "retailZAR": 4829,
+      "bfDiscount": 0.2,
+      "note": "Budget alt · Dedicated DRAM · 7,400/6,700 MB/s · 1,500 TBW",
+      "links": [
+        { "label": "EKD Online", "url": "https://ekdonline.com/product/acer-predator-gm7000-2tb-gen4-x4-dram-cache-nvme-m-2-2280-solid-state-drive-ssd-heatsink-up-to-7400mb-s-gm7000hs-2tb/" }
+      ]
+    }
+  ],
+  "activeSsdId": "ssd-xpg-s70",
   "games": [
     {
       "id": "g-mhwilds",
@@ -1010,6 +1030,9 @@
 </p>
 <div class="option-grid two-col" id="cpu-grid"></div>
 
+<div class="section-label" style="margin-top:16px">Storage — select one</div>
+<div class="option-grid" id="ssd-grid"></div>
+
 <div class="section-label" style="margin-top:16px">Power Supply — select one</div>
 <div class="option-grid" id="psu-grid"></div>
 
@@ -1104,6 +1127,8 @@ let state = {
   activeRamId: RAW.activeRamId,
   cpuOptions:  RAW.cpuOptions.map(c => ({...c})),
   activeCpuId: RAW.activeCpuId,
+  ssdOptions:  RAW.ssdOptions.map(s => ({...s})),
+  activeSsdId: RAW.activeSsdId,
   financial:   RAW.financial,
   showBF:      false,
   editingId:   null,
@@ -1126,10 +1151,11 @@ function getGPU()       { return state.gpuOptions.find(g => g.id === state.activ
 function getPSU()       { return state.psuOptions.find(p => p.id === state.activePsuId); }
 function getRAM()       { return state.ramOptions.find(r => r.id === state.activeRamId); }
 function getCPU()       { return state.cpuOptions.find(c => c.id === state.activeCpuId); }
+function getSSD()       { return state.ssdOptions.find(s => s.id === state.activeSsdId); }
 function allActive() {
-  // Use selected PSU, RAM, CPU instead of component list entries
-  const base = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram' && c.id !== 'cpu');
-  return [...base, getPSU(), getRAM(), getCPU(), getGPU()].filter(Boolean);
+  // Use selected PSU, RAM, CPU, SSD instead of component list entries
+  const base = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram' && c.id !== 'cpu' && c.id !== 'ssd');
+  return [...base, getPSU(), getRAM(), getCPU(), getSSD(), getGPU()].filter(Boolean);
 }
 function obtained()     { return allActive().filter(c => c.obtained); }
 function remaining()    { return allActive().filter(c => !c.obtained); }
@@ -1168,6 +1194,7 @@ function renderOptionGrid(elId, options, activeId, selectFn) {
 function renderPSUs() { renderOptionGrid('psu-grid', state.psuOptions, state.activePsuId, 'selectPSU'); }
 function renderRAMs() { renderOptionGrid('ram-grid', state.ramOptions, state.activeRamId, 'selectRAM'); }
 function renderCPUs() { renderOptionGrid('cpu-grid', state.cpuOptions, state.activeCpuId, 'selectCPU'); }
+function renderSSDs() { renderOptionGrid('ssd-grid', state.ssdOptions, state.activeSsdId, 'selectSSD'); }
 
 function renderGPUs() {
   const el = document.getElementById('gpu-grid');
@@ -1205,12 +1232,13 @@ function renderComponents() {
   const psu = getPSU();
   const ram = getRAM();
   const cpu = getCPU();
+  const ssd = getSSD();
   const gpu = getGPU();
 
-  // Fixed components excluding psu, ram, cpu (those are driven by selectors)
-  const fixedComps = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram' && c.id !== 'cpu');
+  // Fixed components excluding psu, ram, cpu, ssd (those are driven by selectors)
+  const fixedComps = state.components.filter(c => c.id !== 'psu' && c.id !== 'ram' && c.id !== 'cpu' && c.id !== 'ssd');
 
-  // Build synthetic entries for PSU, RAM, CPU, GPU from selectors
+  // Build synthetic entries for PSU, RAM, CPU, SSD, GPU from selectors
   function selectorEntry(opt, category, icon, toggleId) {
     return {
       ...opt,
@@ -1225,6 +1253,7 @@ function renderComponents() {
   const displayList = [
     ...fixedComps,
     cpu ? selectorEntry(cpu, 'Processor', '⚡', 'cpu') : null,
+    ssd ? selectorEntry(ssd, 'Storage', '💿', 'ssd') : null,
     psu ? selectorEntry(psu, 'Power Supply', '🔌', 'psu') : null,
     ram ? selectorEntry(ram, 'Memory', '💾', 'ram') : null,
     gpu ? selectorEntry(gpu, 'Graphics Card', '🎮', 'gpu') : null,
@@ -1380,6 +1409,11 @@ function selectRAM(id) {
 
 function selectCPU(id) {
   state.activeCpuId = id;
+  render();
+}
+
+function selectSSD(id) {
+  state.activeSsdId = id;
   render();
 }
 
@@ -1670,6 +1704,7 @@ function removeSavingsEntry(idx) {
 function render() {
   renderGPUs();
   renderCPUs();
+  renderSSDs();
   renderPSUs();
   renderRAMs();
   renderComponents();

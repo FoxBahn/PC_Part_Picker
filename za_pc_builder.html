@@ -1470,7 +1470,18 @@ function renderBudget() {
       runningPool -= price; // simulate spending down the pool across pills in order
       const pct = Math.max(isFunded ? 100 : 2, Math.round(funded * 100)); // minimum 2% sliver so pill is never invisible
       const color = isFunded ? 'linear-gradient(90deg,#4a5c30,#7d8f52)' : 'linear-gradient(90deg,#5a3a1e,#b5652f)';
-      const label = item.category || (item._isSelector ? item._selectorId.toUpperCase() : item.name.split(' ')[0]);
+      const pillLabelMap = {
+        mobo: 'Motherboard', cooler: 'CPU Cooler', fans: 'Case Fans', case: 'Case'
+      };
+      let label = pillLabelMap[item.id];
+      if (!label) {
+        if (item.id.startsWith('cpu-')) label = 'CPU';
+        else if (item.id.startsWith('gpu-')) label = 'GPU';
+        else if (item.id.startsWith('ram-')) label = 'RAM';
+        else if (item.id.startsWith('ssd-')) label = 'Storage';
+        else if (item.id.startsWith('psu-')) label = 'PSU';
+        else label = item.category || item.name.split(' ')[0];
+      }
       return `
       <div class="runway-pill ${isFunded ? 'funded' : ''}">
         <div class="runway-pill-fill" style="width:${pct}%;background:${color}"></div>

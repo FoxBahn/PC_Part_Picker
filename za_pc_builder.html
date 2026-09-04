@@ -548,7 +548,7 @@
       "name": "AMD Ryzen 5 9600X",
       "retailZAR": 4449,
       "bfDiscount": 0.08,
-      "note": "⭐ Current pick · Zen 5, 6C/12T, 5.4GHz · Best single-thread of the lineup, ideal for GIS + gaming at your 4K/1440p targets · Baseline — everything below is measured against this chip · Trusted: Progenix R4,449 · Budget: Distrinode R3,637",
+      "note": "⭐ Current pick — BASELINE for all comparisons below · Zen 5, 6C/12T, 5.4GHz · Best single-thread of the lineup, ideal for GIS + gaming at your 4K/1440p targets since you're GPU-bound regardless of CPU · Trusted: Progenix R4,449 · Budget: Distrinode R3,637",
       "links": [
         {
           "label": "Progenix",
@@ -593,14 +593,10 @@
     {
       "id": "cpu-7700x",
       "name": "AMD Ryzen 7 7700X",
-      "retailZAR": 3800,
+      "retailZAR": 4999,
       "bfDiscount": 0.08,
-      "note": "💰 Best value upgrade · Zen 4, 8C/16T, 5.4GHz · Gaming: identical to 9600X at your 4K/1440p targets (GPU-bound) · Productivity: ~29% faster multi-core (GIS batch jobs, LLM CPU work, multitasking) · Only ~R650 more than Progenix 9600X for 2 extra cores — best £/core in the lineup",
+      "note": "💰 Best value upgrade · +R550 vs 9600X · GAMING: no difference at your 4K/1440p targets — GPU-bound either way · PRODUCTIVITY: ~29% faster multi-core (GIS batch jobs, LLM CPU offload, multitasking) thanks to 2 extra cores · Trusted: Wootware R4,999",
       "links": [
-        {
-          "label": "Distrinode (verify stock)",
-          "url": "https://distrinode.co.za/"
-        },
         {
           "label": "Wootware",
           "url": "https://www.wootware.co.za/amd-100-100000591wof-ryzen-7-7700x-5-40ghz-8-core-zen-4-socket-am5-desktop-cpu.html"
@@ -608,15 +604,28 @@
       ]
     },
     {
-      "id": "cpu-9700x",
-      "name": "AMD Ryzen 7 9700X",
-      "retailZAR": 4909,
-      "bfDiscount": 0.08,
-      "note": "Zen 5, 8C/16T, 5.5GHz · Gaming: identical to 9600X at 4K/1440p (GPU-bound) · Productivity: ~29% faster multi-core than 9600X, slightly ahead of 7700X on single-thread (Zen 5 IPC) · The 'do everything a bit better' chip, but 7700X gets you 90% of this for R1,100 less",
+      "id": "cpu-7700x3d",
+      "name": "AMD Ryzen 7 7700X3D",
+      "retailZAR": 6999,
+      "bfDiscount": 0.05,
+      "note": "+R2,550 vs 9600X · GAMING: X3D's 3D V-Cache genuinely helps at 1080p/1440p, but the advantage shrinks to near-zero at 4K where your GPU is the bottleneck — you're paying primarily for a gaming benefit your resolution targets won't fully show · PRODUCTIVITY: 8 cores like the 7700X, but typically lower sustained clocks than non-X3D chips, so multi-core work isn't meaningfully better than the cheaper 7700X · Worth it only if you specifically plan to add a high-refresh 1440p monitor later · Trusted: Wootware R6,999",
       "links": [
         {
-          "label": "Distrinode",
-          "url": "https://distrinode.co.za/"
+          "label": "Wootware",
+          "url": "https://www.wootware.co.za/amd-100-100002235wof-ryzen-7-7700x3d-4-5ghz-8-core-zen-4-socket-am5-desktop-cpu-cooler-not-included.html"
+        }
+      ]
+    },
+    {
+      "id": "cpu-9700x",
+      "name": "AMD Ryzen 7 9700X",
+      "retailZAR": 6499,
+      "bfDiscount": 0.08,
+      "note": "+R2,050 vs 9600X · GAMING: no difference at 4K/1440p — GPU-bound · PRODUCTIVITY: same 8-core benefit as 7700X plus newer Zen 5 IPC (~6% faster single-thread) · Costs R1,500 more than 7700X for a small single-thread gain only — 7700X is the smarter buy unless you want the newest architecture specifically · Trusted: Wootware R6,499",
+      "links": [
+        {
+          "label": "Wootware",
+          "url": "https://www.wootware.co.za/amd-100-100001404wof-ryzen-7-9700x-5-50ghz-8-core-zen-5-socket-am5-desktop-cpu-cooler-not-included.html"
         }
       ]
     },
@@ -1274,6 +1283,12 @@ function remainBF()     { return remaining().reduce((s,c) => s + Math.round(c.re
 // ═══════════════════════════════════════════
 //  GPU cards
 // ═══════════════════════════════════════════
+function formatOptionNote(note) {
+  return note
+    .replace(/GAMING:/g, '<strong style="color:#d9a66c">GAMING:</strong>')
+    .replace(/PRODUCTIVITY:/g, '<strong style="color:#8a9a5b">PRODUCTIVITY:</strong>');
+}
+
 function renderOptionGrid(elId, options, activeId, selectFn) {
   const el = document.getElementById(elId);
   if (!el) return;
@@ -1290,7 +1305,7 @@ function renderOptionGrid(elId, options, activeId, selectFn) {
     <button class="option-card ${active ? 'active' : ''} ${owned ? 'owned' : ''}" onclick="${selectFn}('${opt.id}')">
       <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:${badgeColor};margin-bottom:4px">${badgeLabel}</div>
       <div class="option-card-name" style="color:${owned ? '#a8b87a' : 'var(--text)'}">${opt.name}</div>
-      <div class="option-card-note">${opt.note}</div>
+      <div class="option-card-note">${formatOptionNote(opt.note)}</div>
       <div class="option-card-price" style="color:${owned ? '#9cae72' : 'var(--green)'}">${fmtZAR(opt.retailZAR)}</div>
       <div class="option-card-bf">BF est: ${fmtZAR(bf)}</div>
       <div class="option-card-links">${linksHtml}</div>

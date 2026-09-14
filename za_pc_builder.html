@@ -199,6 +199,40 @@
   .bf-row span:first-child { color: var(--muted); }
   .bf-row span:last-child { font-family: var(--mono); font-weight: 700; color: var(--green); }
 
+  /* ── Build Cost Spreadsheet ── */
+  .spreadsheet {
+    border: 1px solid var(--border2); border-radius: 12px; overflow: hidden;
+    background: var(--surface); margin-bottom: 8px;
+  }
+  .spreadsheet-header {
+    display: grid; grid-template-columns: 1.4fr 1fr 0.9fr 1fr;
+    background: var(--surface2); padding: 8px 12px; gap: 8px;
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+    border-bottom: 1px solid var(--border2);
+  }
+  .spreadsheet-row {
+    display: grid; grid-template-columns: 1.4fr 1fr 0.9fr 1fr;
+    padding: 10px 12px; gap: 8px; align-items: center;
+    border-bottom: 1px solid var(--border); font-size: 12px;
+  }
+  .spreadsheet-row:last-child { border-bottom: none; }
+  .spreadsheet-row.owned-row { background: var(--green-dim); }
+  .spreadsheet-row.total-row {
+    background: var(--surface2); font-weight: 700; border-top: 2px solid var(--border2);
+    padding: 12px; font-size: 13px;
+  }
+  .ss-cat { font-weight: 600; color: var(--text); }
+  .ss-price { font-family: var(--mono); color: var(--text); }
+  .ss-status { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ss-status.owned { color: #8a9a5b; }
+  .ss-status.pending { color: #d9a66c; }
+  .ss-remaining { font-family: var(--mono); color: var(--muted); }
+  .ss-remaining.done { color: #8a9a5b; }
+  @media (max-width: 480px) {
+    .spreadsheet-header, .spreadsheet-row { grid-template-columns: 1.2fr 0.9fr 0.7fr; font-size: 11px; }
+    .spreadsheet-header span:nth-child(4), .spreadsheet-row .ss-remaining { display: none; }
+  }
+
   /* ── Savings Tracker ── */
   .savings-summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
   .savings-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
@@ -1226,6 +1260,13 @@
   <button class="bf-toggle" onclick="logMonthlyContribution()" style="width:100%;padding:12px;border-color:var(--green);color:#8a9a5b">+ Log this month's R5,000 (25th)</button>
 </div>
 
+<!-- ══ BUILD COST SPREADSHEET ══ -->
+<div class="section-label" style="margin-top:24px">Build Cost Breakdown</div>
+<p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+  Every category, current selected price, status, and what's left to save — at a glance.
+</p>
+<div class="spreadsheet" id="cost-spreadsheet"></div>
+
 <!-- ══ GAME LIBRARY & PERFORMANCE ══ -->
 <div class="section-label" style="margin-top:24px">Game Library &amp; Expected Performance</div>
 <p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
@@ -1787,6 +1828,67 @@ function nextContributionMonth() {
   return { y, m };
 }
 
+function renderSpreadsheet() {
+  const el = document.getElementById('cost-spreadsheet');
+  if (!el) return;
+
+  const labelMap = { mobo: 'Motherboard', cooler: 'CPU Cooler', fans: 'Case Fans', case: 'Case' };
+
+  const items = allActive().map(item => {
+    let label = labelMap[item.id];
+    if (!label) {
+      if (item.id.startsWith('cpu-')) label = 'CPU';
+      else if (item.id.startsWith('gpu-')) label = 'GPU';
+      else if (item.id.startsWith('ram-')) label = 'RAM';
+      else if (item.id.startsWith('ssd-')) label = 'Storage';
+      else if (item.id.startsWith('psu-')) label = 'PSU';
+      else label = item.category || item.id;
+    }
+    return { label, price: item.retailZAR, owned: !!item.obtained };
+  });
+
+  // Sort: owned first, then by category name
+  items.sort((a, b) => {
+    if (a.owned !== b.owned) return a.owned ? -1 : 1;
+    return a.label.localeCompare(b.label);
+  });
+
+  const totalCost = items.reduce((s, i) => s + i.price, 0);
+  const spentSoFar = items.filter(i => i.owned).reduce((s, i) => s + i.price, 0);
+  const stillNeeded = totalCost - spentSoFar;
+  const pool = currentSavingsPool();
+
+  const rowsHtml = items.map(i => {
+    const remainingForThis = i.owned ? 0 : i.price;
+    return `
+    <div class="spreadsheet-row ${i.owned ? 'owned-row' : ''}">
+      <div class="ss-cat">${i.label}</div>
+      <div class="ss-price">${fmtZAR(i.price)}</div>
+      <div class="ss-status ${i.owned ? 'owned' : 'pending'}">${i.owned ? '✓ Owned' : 'Pending'}</div>
+      <div class="ss-remaining ${i.owned ? 'done' : ''}">${i.owned ? '—' : fmtZAR(remainingForThis)}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="spreadsheet-header">
+      <span>Category</span><span>Price</span><span>Status</span><span>Remaining</span>
+    </div>
+    ${rowsHtml}
+    <div class="spreadsheet-row total-row">
+      <div class="ss-cat">TOTAL BUILD</div>
+      <div class="ss-price">${fmtZAR(totalCost)}</div>
+      <div class="ss-status" style="color:var(--muted)">${items.filter(i=>i.owned).length}/${items.length} owned</div>
+      <div class="ss-remaining" style="color:${stillNeeded <= pool ? '#8a9a5b' : '#c9773b'}">${fmtZAR(stillNeeded)}</div>
+    </div>
+    <div class="spreadsheet-row" style="background:var(--surface2)">
+      <div class="ss-cat" style="color:var(--muted);font-weight:400">Saved so far</div>
+      <div class="ss-price" style="color:#d9a66c">${fmtZAR(pool)}</div>
+      <div class="ss-status" style="color:var(--muted)"></div>
+      <div class="ss-remaining" style="color:${pool >= stillNeeded ? '#8a9a5b' : '#c9773b'}">${pool >= stillNeeded ? '✓ Covered' : fmtZAR(stillNeeded - pool) + ' short'}</div>
+    </div>
+  `;
+}
+
 function renderSavings() {
   const summaryEl = document.getElementById('savings-summary');
   const logEl = document.getElementById('savings-log');
@@ -1889,6 +1991,7 @@ function render() {
   renderHeader();
   renderGames();
   renderSavings();
+  renderSpreadsheet();
 }
 
 render();
